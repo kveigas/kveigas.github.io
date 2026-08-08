@@ -133,20 +133,21 @@
 </head>
 
 <body>
-    <div id="canvas-container"></div>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div id="canvas-container" aria-hidden="true"></div>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useRef } = React;
 
         // --- Professional Icons (Thin Stroke, Minimal) ---
         const Icons = {
-            ArrowDown: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>,
-            External: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>,
-            Play: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>,
-            Mail: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>,
-            Linkedin: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>,
-            MapPin: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+            ArrowDown: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>,
+            External: () => <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>,
+            Play: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>,
+            Mail: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>,
+            Linkedin: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>,
+            MapPin: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
         };
 
         // --- 3D Background (Dual Waves + Morphing Globe) ---
@@ -257,9 +258,13 @@
                 window.addEventListener('scroll', handleScroll);
 
                 let count = 0;
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                let animationFrameId = null;
 
                 const animate = () => {
-                    requestAnimationFrame(animate);
+                    if (!reduceMotion) {
+                        animationFrameId = requestAnimationFrame(animate);
+                    }
 
                     // 1. Animate Waves
                     [whiteWave, greenWave].forEach(wave => {
@@ -321,8 +326,10 @@
                 window.addEventListener('resize', handleResize);
 
                 return () => {
+                    if (animationFrameId) cancelAnimationFrame(animationFrameId);
                     window.removeEventListener('resize', handleResize);
                     window.removeEventListener('scroll', handleScroll);
+                    renderer.dispose();
                 };
             }, []);
             return null;
@@ -413,21 +420,30 @@
         };
 
         const CoreCapabilities = () => {
-            const { skills } = window.PORTFOLIO_DATA;
+            const { skills, supportingTools } = window.PORTFOLIO_DATA;
             return (
-                <section id="capabilities" className="container">
-                    <h2 className="section-title">Core Capabilities</h2>
+                <section id="capabilities" className="container" aria-labelledby="capabilities-heading">
+                    <div className="section-heading-compact">
+                        <h2 id="capabilities-heading" className="section-title">Core Capabilities</h2>
+                        <p>Practical strengths across data delivery, model assessment, technical review, and project coordination.</p>
+                    </div>
                     <div className="capabilities-grid">
                         {Object.entries(skills).map(([category, items]) => (
-                            <div key={category} className="glass-panel capability-group">
+                            <article key={category} className="glass-panel capability-group">
                                 <h3>{category}</h3>
-                                <div className="capability-tags">
+                                <ul className="capability-list">
                                     {items.map(skill => (
-                                        <span key={skill} className="tech-tag">{skill}</span>
+                                        <li key={skill}>{skill}</li>
                                     ))}
-                                </div>
-                            </div>
+                                </ul>
+                            </article>
                         ))}
+                    </div>
+                    <div className="supporting-tools" aria-label="Supporting technical tools">
+                        <span className="supporting-tools-label">Supporting tools</span>
+                        <ul>
+                            {supportingTools.map(tool => <li key={tool}>{tool}</li>)}
+                        </ul>
                     </div>
                 </section>
             );
@@ -443,7 +459,10 @@
                             <article key={company.name} className="glass-panel experience-card">
                                 <header className="experience-card-header">
                                     <div className="experience-identity">
-                                        <p className="experience-company">{company.name}</p>
+                                        <div className="experience-company-line">
+                                            <p className="experience-company">{company.name}</p>
+                                            {company.engagementType && <span className="experience-engagement">{company.engagementType}</span>}
+                                        </div>
                                         <h3 className="experience-role">{company.role}</h3>
                                         {company.focus && <p className="experience-focus">{company.focus}</p>}
                                     </div>
@@ -487,12 +506,40 @@
         const Projects = () => {
             const { projects } = window.PORTFOLIO_DATA;
             const [activeProject, setActiveProject] = useState(null);
+            const caseStudyTrigger = useRef(null);
+            const caseStudyDialog = useRef(null);
+
+            const closeCaseStudy = () => {
+                setActiveProject(null);
+                window.requestAnimationFrame(() => caseStudyTrigger.current?.focus());
+            };
 
             useEffect(() => {
                 document.body.style.overflow = activeProject ? 'hidden' : '';
 
+                if (activeProject) {
+                    window.requestAnimationFrame(() => {
+                        caseStudyDialog.current?.querySelector('.case-study-close')?.focus();
+                    });
+                }
+
                 const closeOnEscape = (event) => {
-                    if (event.key === 'Escape') setActiveProject(null);
+                    if (event.key === 'Escape' && activeProject) closeCaseStudy();
+
+                    if (event.key === 'Tab' && activeProject && caseStudyDialog.current) {
+                        const focusable = [...caseStudyDialog.current.querySelectorAll('a[href], button:not([disabled]), summary')];
+                        if (!focusable.length) return;
+                        const first = focusable[0];
+                        const last = focusable[focusable.length - 1];
+
+                        if (event.shiftKey && document.activeElement === first) {
+                            event.preventDefault();
+                            last.focus();
+                        } else if (!event.shiftKey && document.activeElement === last) {
+                            event.preventDefault();
+                            first.focus();
+                        }
+                    }
                 };
 
                 document.addEventListener('keydown', closeOnEscape);
@@ -502,7 +549,10 @@
                 };
             }, [activeProject]);
 
-            const closeCaseStudy = () => setActiveProject(null);
+            const openCaseStudy = (project, event) => {
+                caseStudyTrigger.current = event.currentTarget;
+                setActiveProject(project);
+            };
 
             return (
                 <section id="projects" className="container flagship-projects">
@@ -550,7 +600,7 @@
                                     <button
                                         type="button"
                                         className="btn-secondary project-case-study-button"
-                                        onClick={() => setActiveProject(project)}
+                                        onClick={(event) => openCaseStudy(project, event)}
                                     >
                                         View Case Study
                                     </button>
@@ -577,6 +627,7 @@
                         <div className="case-study-backdrop" onClick={closeCaseStudy}>
                             <article
                                 className="case-study-dialog"
+                                ref={caseStudyDialog}
                                 role="dialog"
                                 aria-modal="true"
                                 aria-labelledby="case-study-title"
@@ -648,47 +699,67 @@
         const Education = () => {
             const { education, certifications } = window.PORTFOLIO_DATA;
             return (
-                <section id="education" className="container">
-                    <h2 className="section-title">Education &amp; Certifications</h2>
+                <section id="education" className="container" aria-labelledby="education-heading">
+                    <h2 id="education-heading" className="section-title">Education &amp; Certifications</h2>
                     <div className="education-cert-grid">
-                        <div className="education-list">
+                        <div className="education-list" aria-label="Education">
                             {education.map((edu, index) => (
-                                <div key={index} className="glass-panel education-item">
-                                    <div>
-                                        <h3>{edu.degree}</h3>
-                                        <div>{edu.school}, {edu.location}</div>
+                                <article key={edu.degree} className="glass-panel education-item">
+                                    <div className="education-content">
+                                        <p className="education-degree">{edu.degree}</p>
+                                        <h3>{edu.field}</h3>
+                                        <p className="education-school">{edu.school}</p>
+                                        {edu.detail && <p className="education-detail">{edu.detail}</p>}
                                     </div>
-                                    {edu.year && <span className="education-year">{edu.year}</span>}
-                                </div>
+                                    <span className="education-year">{edu.status}</span>
+                                </article>
                             ))}
                         </div>
-                        <div className="glass-panel certification-list">
-                            <h3>Professional Certifications</h3>
-                            <ul>
-                                {certifications.map((cert, index) => (
+                        <aside className="glass-panel certification-list" aria-labelledby="certifications-heading">
+                            <h3 id="certifications-heading">Selected Certifications</h3>
+                            <ul className="featured-certifications">
+                                {certifications.featured.map(cert => (
                                     <li key={cert}>
                                         <span className="certification-marker" aria-hidden="true"></span>
                                         {cert}
                                     </li>
                                 ))}
                             </ul>
-                        </div>
+                            <details className="additional-certifications">
+                                <summary>Additional certifications</summary>
+                                <ul>
+                                    {certifications.additional.map(cert => <li key={cert}>{cert}</li>)}
+                                </ul>
+                            </details>
+                        </aside>
                     </div>
                 </section>
             );
         };
 
         const Contact = () => {
+            const { personal } = window.PORTFOLIO_DATA;
+            const resumeHref = personal.resumeUrl || `mailto:${personal.email}?subject=Resume Request`;
+
             return (
-                <section id="contact" className="container" style={{ marginBottom: '4rem' }}>
-                    <h2 className="section-title">Contact</h2>
-                    <div style={{ maxWidth: '600px' }}>
-                        <p style={{ fontSize: '1.2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
-                            Open to remote and global opportunities across AI data operations, evaluation, project operations, and technical QA.
+                <section id="contact" className="container contact-section" aria-labelledby="contact-heading">
+                    <div className="contact-panel glass-panel">
+                        <p className="section-eyebrow">Contact</p>
+                        <h2 id="contact-heading">Let's Connect</h2>
+                        <p className="contact-copy">
+                            I'm interested in opportunities across AI Data Operations, AI Evaluation, Technical QA, and AI Project Operations.
                         </p>
-                        <a href="mailto:kveigas825@gmail.com" className="btn-primary" style={{ color: 'black', background: 'white', textDecoration: 'none' }}>
-                            <Icons.Mail /> kveigas825@gmail.com
-                        </a>
+                        <div className="contact-actions" aria-label="Contact options">
+                            <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                                <Icons.Linkedin /> LinkedIn
+                            </a>
+                            <a href={`mailto:${personal.email}`} className="btn-secondary">
+                                <Icons.Mail /> Email
+                            </a>
+                            <a href={resumeHref} className="contact-text-link">
+                                Request Resume
+                            </a>
+                        </div>
                     </div>
                 </section>
             );
@@ -696,14 +767,10 @@
 
         const Footer = () => {
             return (
-                <footer style={{
-                    borderTop: '1px solid var(--glass-border)',
-                    padding: '3rem 0',
-                    textAlign: 'center',
-                    background: '#0a0c0f'
-                }}>
-                    <div className="container" style={{ display: 'flex', justifyContent: 'center', color: '#555' }}>
+                <footer className="site-footer">
+                    <div className="container site-footer-inner">
                         <span>© 2026 Kevin Prashant Veigas. All rights reserved.</span>
+                        <a href="#top">Back to top</a>
                     </div>
                 </footer>
             );
@@ -713,15 +780,17 @@
             return (
                 <React.Fragment>
                     <WaveBackground />
-                    <div className="vignette-overlay"></div>
+                    <div className="vignette-overlay" aria-hidden="true"></div>
                     <Navbar />
-                    <Hero />
-                    <ImpactStrip />
-                    <Experience />
-                    <Projects />
-                    <CoreCapabilities />
-                    <Education />
-                    <Contact />
+                    <main id="main-content" tabIndex="-1">
+                        <Hero />
+                        <ImpactStrip />
+                        <Experience />
+                        <Projects />
+                        <CoreCapabilities />
+                        <Education />
+                        <Contact />
+                    </main>
                     <Footer />
                 </React.Fragment>
             );

@@ -7,63 +7,64 @@ window.PORTFOLIO_DATA = {
         location: "",
         googleMapsUrl: "",
         linkedin: "https://www.linkedin.com/in/kevinveigas",
+        resumeUrl: null,
         summary: "AI operations and project coordination professional with hands-on experience across the full lifecycle of AI training and evaluation data: building annotation and evaluation pipelines, monitoring production AI systems, running quality calibration processes, and coordinating cross-functional and client-facing delivery. Track record includes owning a 15,000+ item annotation and evaluation pipeline to 99%+ accuracy, cutting issue response time by 35% through proactive drift monitoring, taking process accuracy from 85% to 93% through structured calibration, and cutting QA/rework cycle time by roughly 30%. Holds CAPM (PMI) and Certified ScrumMaster credentials and a Post-Graduate Certificate in IT Project Management (Dean's Honour List)."
     },
     skills: {
-        "AI Operations & RLHF": [
-            "Pipeline Management",
-            "Production System Monitoring",
-            "Drift Detection & Root Cause Analysis",
-            "Agent/Model Performance Tuning",
-            "Rubric-Based Auditing",
-            "Adversarial Evaluation"
+        "AI Data Operations": [
+            "Dataset Validation",
+            "Annotation Operations",
+            "Reviewer Workflows",
+            "Data Quality",
+            "Model Monitoring",
+            "Anomaly Detection"
         ],
-        "Quality & Statistics": [
-            "Statistical Quality Control (Krippendorff's Alpha, Fleiss' Kappa, Dawid-Skene, MACE)",
-            "Inter-Annotator/Inter-Rater Agreement",
-            "Calibration Design",
-            "Active Learning"
+        "AI Evaluation": [
+            "Rubric-Based Evaluation",
+            "Preference Ranking",
+            "Calibration",
+            "Inter-Annotator Agreement",
+            "Disagreement Analysis",
+            "Quality Monitoring"
         ],
-        "Project & Operations Coordination": [
-            "Requirements Gathering",
-            "Scope & Timeline Tracking",
-            "Status Reporting",
-            "Risk & Issue Escalation",
-            "Documentation Management",
-            "Stakeholder Management"
-        ],
-        "Tools & Platforms": [
-            "Label Studio",
-            "Labelbox",
-            "Prodigy",
-            "Argilla",
-            "Encord",
+        "Technical QA": [
+            "SQL Data Retrieval",
+            "Excel / Google Sheets",
             "Grafana",
-            "Jira",
-            "Confluence",
-            "Excel (Pivot Tables, VLOOKUP, Macros)",
-            "SQL",
-            "Python (Pandas, NumPy)",
-            "Microsoft Office",
-            "Agile/Scrum/Kanban"
+            "Root-Cause Analysis",
+            "Issue Reporting",
+            "Workflow Validation"
+        ],
+        "AI Project Operations": [
+            "Agile Delivery",
+            "Stakeholder Communication",
+            "KPI Reporting",
+            "Documentation",
+            "Workflow Improvement",
+            "Cross-Functional Coordination"
         ]
     },
-    certifications: [
-        "CAPM® - Certified Associate in Project Management (PMI)",
-        "Certified ScrumMaster® (CSM - Scrum Alliance)",
-        "AI Product Management (Duke University)",
-        "Deep Learning Specialization (Coursera / Andrew Ng)",
-        "Machine Learning (Stanford University)",
-        "Managing Machine Learning Projects (Duke University)",
-        "Competitive Strategy & Managerial Economics",
-        "Excel for Business (Illinois Tech)"
-    ],
+    supportingTools: ["Python", "SQL", "Excel", "Grafana", "Jira", "Confluence"],
+    certifications: {
+        featured: [
+            "CAPM — Certified Associate in Project Management (PMI)",
+            "Certified ScrumMaster (CSM) — Scrum Alliance",
+            "AI Product Management — Duke University",
+            "Managing Machine Learning Projects — Duke University",
+            "Deep Learning Specialization — Coursera / Andrew Ng"
+        ],
+        additional: [
+            "Machine Learning — Stanford University",
+            "Competitive Strategy & Managerial Economics",
+            "Excel for Business — Illinois Tech"
+        ]
+    },
     companies: [
         {
             name: "micro1",
             role: "Business Operations Specialist (AI Training)",
             location: "Remote",
-            duration: "June 2026 – Present",
+            duration: "Jun. 2026 – Present",
             focus: "AI Training Operations / AI Data Review",
             description: "Contributor and reviewer work across enterprise software workflows used to train frontier AI agents.",
             achievements: [
@@ -121,6 +122,7 @@ window.PORTFOLIO_DATA = {
         {
             name: "Handshake AI",
             role: "AI Training Fellow, Project Seal",
+            engagementType: "Fellowship / Project Work",
             location: "Remote",
             duration: "2026 – Present",
             focus: "AI Evaluation / Adversarial Research",
@@ -135,22 +137,25 @@ window.PORTFOLIO_DATA = {
     ],
     education: [
         {
-            degree: "M.S., AI & Technology Management (Final coursework in progress)",
+            degree: "Master of Science",
+            field: "AI & Technology Management",
             school: "Nexford University",
-            location: "Online (U.S.-accredited)",
-            year: "Present"
+            detail: "Final coursework in progress · Online (U.S.-accredited)",
+            status: "In progress"
         },
         {
-            degree: "Post-Graduate Certificate, IT Project Management (Graduated with Distinction, Dean's Honour List)",
+            degree: "Postgraduate Certificate",
+            field: "Information Technology Project Management",
             school: "Conestoga College",
-            location: "Ontario, Canada",
-            year: "Dec 2024"
+            detail: "Graduated with Distinction · Dean's Honour List",
+            status: "Dec. 2024"
         },
         {
-            degree: "Bachelor of Engineering, Computer Science (First Class)",
+            degree: "Bachelor of Engineering",
+            field: "Computer Science",
             school: "Visvesvaraya Technological University (VTU)",
-            location: "India",
-            year: "Sep 2023"
+            detail: "First Class",
+            status: "Sep. 2023"
         }
     ],
     projects: [
