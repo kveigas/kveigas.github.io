@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kevin Veigas | Project Management & AI Operations</title>
+    <title>Kevin Veigas | AI Data Operations & Evaluation</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -329,27 +329,22 @@
         };
 
         const Navbar = () => {
+            const navItems = [
+                { label: 'Experience', href: '#experience' },
+                { label: 'Projects', href: '#projects' },
+                { label: 'Capabilities', href: '#capabilities' },
+                { label: 'Education', href: '#education' },
+                { label: 'Contact', href: '#contact' }
+            ];
+
             return (
-                <nav style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    padding: '1.5rem 2rem',
-                    zIndex: 100,
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    background: 'rgba(0,0,0,0.8)',
-                    backdropFilter: 'blur(10px)',
-                    borderBottom: '1px solid var(--glass-border)'
-                }}>
-                    <div style={{ fontWeight: 700, fontSize: '1.2rem', letterSpacing: '0.1em' }}>
+                <nav className="site-nav" aria-label="Primary navigation">
+                    <a href="#top" className="site-logo" aria-label="Kevin Veigas home">
                         KV<span style={{ color: 'var(--accent-highlight)' }}>.</span>
-                    </div>
-                    <ul style={{ display: 'flex', gap: '2rem', listStyle: 'none', margin: 0 }}>
-                        {['Summary', 'Skills', 'Projects', 'Experience', 'Education'].map(item => (
-                            <li key={item}><a href={`#${item.toLowerCase()}`} className="nav-link">{item}</a></li>
+                    </a>
+                    <ul className="site-nav-links">
+                        {navItems.map(item => (
+                            <li key={item.href}><a href={item.href} className="nav-link">{item.label}</a></li>
                         ))}
                     </ul>
                 </nav>
@@ -359,131 +354,80 @@
         const Hero = () => {
             const { personal } = window.PORTFOLIO_DATA;
             return (
-                <section style={{
-                    minHeight: '85vh',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textAlign: 'center',
-                    paddingTop: '80px',
-                    position: 'relative'
-                }}>
-                    {/* Background Glow Effect */}
+                <section id="top" className="hero-section container">
                     <div className="hero-glow"></div>
+                    <div className="hero-content">
+                        <p className="hero-name">{personal.name}</p>
+                        <h1 className="hero-title">AI Data Operations <span>&amp; Evaluation</span></h1>
+                        <p className="hero-secondary">AI Project Operations / Technical QA</p>
+                        <p className="hero-summary">
+                            I build and run high-quality AI data workflows — from annotation and review operations to dataset validation, model evaluation, quality monitoring, and cross-functional delivery.
+                        </p>
+                        <p className="hero-status">
+                            <span className="status-dot" aria-hidden="true"></span>
+                            Mangaluru, India <span aria-hidden="true">·</span> Open to Remote &amp; Global Opportunities
+                        </p>
 
-                    {/* Small Top Tag Removed */}
+                        <div className="hero-actions" aria-label="Homepage actions">
+                            <a href="#projects" className="btn-primary">View Projects</a>
+                            <a href="#experience" className="btn-secondary">View Experience</a>
+                        </div>
 
-                    {/* Name */}
-                    <h1 style={{
-                        fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
-                        marginBottom: '0.5rem',
-                        lineHeight: 1.1,
-                        fontWeight: 700,
-                        letterSpacing: '-0.03em'
-                    }} className="text-gradient">
-                        {personal.name.toUpperCase()}
-                    </h1>
-
-                    {/* Attractive Value Proposition */}
-                    <h2 style={{
-                        fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
-                        fontWeight: 600,
-                        marginBottom: '1.5rem',
-                        maxWidth: '800px'
-                    }}>
-                        Bridging <span className="title-gradient">AI Strategy</span> & <span className="title-gradient">Operational Excellence</span>
-                    </h2>
-
-                    {/* Professional Description */}
-                    <p style={{
-                        fontSize: '1.1rem',
-                        color: 'var(--text-secondary)',
-                        maxWidth: '600px',
-                        marginBottom: '2.5rem',
-                        lineHeight: 1.6
-                    }}>
-                        Optimizing the delivery of complex Machine Learning workflows.
-                        Expert in translating business requirements into scalable technical reality.
-                    </p>
-
-                    {/* Contact Info Row */}
-                    <div style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: '1.5rem',
-                        justifyContent: 'center',
-                        fontSize: '0.95rem',
-                        color: 'var(--text-muted)',
-                        padding: '1rem',
-                        borderTop: '1px solid rgba(255,255,255,0.05)'
-                    }}>
-                        <span style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}><Icons.Mail /> {personal.email}</span>
-                        {personal.location && (
-                            <a href={personal.googleMapsUrl} target="_blank" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', color: 'inherit', textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = 'white'} onMouseOut={(e) => e.currentTarget.style.color = 'inherit'}>
-                                <Icons.External /> {personal.location}
+                        <div className="hero-resource-links">
+                            <a href={`mailto:${personal.email}?subject=Resume Request`} className="hero-text-link">
+                                Request Resume
                             </a>
-                        )}
-                    </div>
-
-                    {/* Call to Action */}
-                    <div style={{ marginTop: '2rem' }}>
-                        <a href={personal.linkedin} target="_blank" className="btn-primary" style={{ padding: '0.8rem 2rem', fontSize: '1rem', textDecoration: 'none', color: 'black' }}>
-                            <Icons.Linkedin /> Connect on LinkedIn
-                        </a>
+                            <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="hero-text-link">
+                                <Icons.Linkedin /> LinkedIn
+                            </a>
+                        </div>
                     </div>
                 </section>
             );
         };
 
-        const Summary = () => (
-            <section id="summary" className="container">
-                <h2 className="section-title">Professional Summary</h2>
-                <div className="glass-panel" style={{ padding: '2.5rem', lineHeight: '1.8', fontSize: '1.1rem', color: 'var(--text-secondary)' }}>
-                    {window.PORTFOLIO_DATA.personal.summary}
-                </div>
-            </section>
-        );
+        const ImpactStrip = () => {
+            const metrics = [
+                { value: '15,000+', label: 'Images validated' },
+                { value: '15', label: 'Annotation team members led' },
+                { value: '99%+', label: 'Dataset quality' },
+                { value: '19', label: 'Deployed AI systems monitored' },
+                { value: '30%', label: 'Reduction in QA cycle time' },
+                { value: '35%', label: 'Faster issue response' }
+            ];
 
-        const Skills = () => {
-            const { skills, certifications } = window.PORTFOLIO_DATA;
             return (
-                <section id="skills" className="container">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
-                        {/* Skills Column */}
-                        <div>
-                            <h2 className="section-title">Core Competencies</h2>
-                            <div className="glass-panel" style={{ padding: '2rem' }}>
-                                {Object.entries(skills).map(([category, items]) => (
-                                    <div key={category} style={{ marginBottom: '2rem' }}>
-                                        <h4 style={{ color: 'white', marginBottom: '0.8rem', fontSize: '0.95rem' }}>{category}</h4>
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
-                                            {items.map(skill => (
-                                                <span key={skill} className="tech-tag" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'var(--glass-border)' }}>{skill}</span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
+                <section className="impact-section container" aria-labelledby="impact-heading">
+                    <p id="impact-heading" className="section-eyebrow">Selected operational impact</p>
+                    <div className="impact-grid">
+                        {metrics.map(metric => (
+                            <div className="impact-item" key={metric.label}>
+                                <strong className="impact-value">{metric.value}</strong>
+                                <span className="impact-label">{metric.label}</span>
                             </div>
-                        </div>
-                        {/* Certifications Column */}
-                        <div>
-                            <h2 className="section-title">Certifications</h2>
-                            <div className="glass-panel" style={{ padding: '2rem' }}>
-                                <ul style={{ listStyle: 'none' }}>
-                                    {certifications.map((cert, i) => (
-                                        <li key={i} style={{
-                                            marginBottom: '1rem', paddingBottom: '1rem',
-                                            borderBottom: i !== certifications.length - 1 ? '1px solid var(--glass-border)' : 'none',
-                                            display: 'flex', alignItems: 'start', gap: '0.8rem', fontSize: '0.95rem'
-                                        }}>
-                                            <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', marginTop: '6px', flexShrink: 0, boxShadow: '0 0 8px rgba(16, 185, 129, 0.4)' }} />
-                                            {cert}
-                                        </li>
+                        ))}
+                    </div>
+                    <p className="impact-source">Professional experience metrics, primarily from Maneva.</p>
+                </section>
+            );
+        };
+
+        const CoreCapabilities = () => {
+            const { skills } = window.PORTFOLIO_DATA;
+            return (
+                <section id="capabilities" className="container">
+                    <h2 className="section-title">Core Capabilities</h2>
+                    <div className="capabilities-grid">
+                        {Object.entries(skills).map(([category, items]) => (
+                            <div key={category} className="glass-panel capability-group">
+                                <h3>{category}</h3>
+                                <div className="capability-tags">
+                                    {items.map(skill => (
+                                        <span key={skill} className="tech-tag">{skill}</span>
                                     ))}
-                                </ul>
+                                </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
                 </section>
             );
@@ -494,36 +438,38 @@
             return (
                 <section id="experience" className="container">
                     <h2 className="section-title">Professional Experience</h2>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    <div className="experience-list">
                         {companies.map((company, index) => (
-                            <div key={index} className="glass-panel" style={{ padding: '2.5rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', alignItems: 'baseline' }}>
-                                    <div>
-                                        <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>{company.role}</h3>
-                                        <div style={{ color: 'var(--text-muted)', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                            <span style={{ color: 'white', fontWeight: 500 }}>{company.name}</span>
-                                            <span>•</span>
-                                            <span>{company.location}</span>
-                                        </div>
+                            <article key={company.name} className="glass-panel experience-card">
+                                <header className="experience-card-header">
+                                    <div className="experience-identity">
+                                        <p className="experience-company">{company.name}</p>
+                                        <h3 className="experience-role">{company.role}</h3>
+                                        {company.focus && <p className="experience-focus">{company.focus}</p>}
                                     </div>
-                                    <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontFamily: 'monospace', background: 'rgba(255,255,255,0.05)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
-                                        {company.duration}
+                                    <div className="experience-meta" aria-label={`${company.duration}, ${company.location}`}>
+                                        <span className="experience-duration">{company.duration}</span>
+                                        <span>{company.location}</span>
                                     </div>
-                                </div>
+                                </header>
 
-                                <p style={{ marginBottom: '2rem', maxWidth: '800px', lineHeight: 1.8, fontStyle: 'italic' }}>{company.description}</p>
-
-                                <div>
-                                    <ul style={{ listStyle: 'none' }}>
-                                        {company.achievements.map((ach, i) => (
-                                            <li key={i} style={{ marginBottom: '0.8rem', paddingLeft: '1.5rem', position: 'relative', color: 'var(--text-secondary)' }}>
-                                                <span style={{ position: 'absolute', left: 0, color: 'var(--accent-highlight)' }}>•</span>
-                                                {ach}
-                                            </li>
+                                {company.metrics && (
+                                    <div className="experience-metrics" aria-label={`${company.name} selected outcomes`}>
+                                        {company.metrics.map(metric => (
+                                            <div className="experience-metric" key={`${company.name}-${metric.label}`}>
+                                                <strong>{metric.value}</strong>
+                                                <span>{metric.label}</span>
+                                            </div>
                                         ))}
-                                    </ul>
-                                </div>
-                            </div>
+                                    </div>
+                                )}
+
+                                <ul className="experience-bullets">
+                                    {company.achievements.map(achievement => (
+                                        <li key={achievement}>{achievement}</li>
+                                    ))}
+                                </ul>
+                            </article>
                         ))}
                     </div>
                 </section>
@@ -640,7 +586,7 @@
 
             return (
                 <section id="projects" className="container">
-                    <h2 className="section-title">Featured Engineering</h2>
+                    <h2 className="section-title">Flagship Projects</h2>
 
                     {/* Featured Project Layout */}
                     {featured && (
@@ -833,24 +779,38 @@
             );
         };
 
-        const Education = () => (
-            <section id="education" className="container" style={{ marginBottom: '6rem' }}>
-                <h2 className="section-title">Education</h2>
-                <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    {window.PORTFOLIO_DATA.education.map((edu, index) => (
-                        <div key={index} className="glass-panel" style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                            <div>
-                                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.3rem', color: 'white' }}>{edu.degree}</h3>
-                                <div style={{ color: 'var(--text-muted)' }}>{edu.school}, {edu.location}</div>
-                            </div>
-                            {edu.year && (
-                                <div style={{ fontFamily: 'monospace', color: 'var(--accent-highlight)', fontSize: '0.9rem' }}>{edu.year}</div>
-                            )}
+        const Education = () => {
+            const { education, certifications } = window.PORTFOLIO_DATA;
+            return (
+                <section id="education" className="container">
+                    <h2 className="section-title">Education &amp; Certifications</h2>
+                    <div className="education-cert-grid">
+                        <div className="education-list">
+                            {education.map((edu, index) => (
+                                <div key={index} className="glass-panel education-item">
+                                    <div>
+                                        <h3>{edu.degree}</h3>
+                                        <div>{edu.school}, {edu.location}</div>
+                                    </div>
+                                    {edu.year && <span className="education-year">{edu.year}</span>}
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </section>
-        );
+                        <div className="glass-panel certification-list">
+                            <h3>Professional Certifications</h3>
+                            <ul>
+                                {certifications.map((cert, index) => (
+                                    <li key={cert}>
+                                        <span className="certification-marker" aria-hidden="true"></span>
+                                        {cert}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
 
         const Contact = () => {
             return (
@@ -858,7 +818,7 @@
                     <h2 className="section-title">Contact</h2>
                     <div style={{ maxWidth: '600px' }}>
                         <p style={{ fontSize: '1.2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
-                            Available for new opportunities in AI Operations and Technical Project Management.
+                            Open to remote and global opportunities across AI data operations, evaluation, project operations, and technical QA.
                         </p>
                         <a href="mailto:kveigas825@gmail.com" className="btn-primary" style={{ color: 'black', background: 'white', textDecoration: 'none' }}>
                             <Icons.Mail /> kveigas825@gmail.com
@@ -890,11 +850,12 @@
                     <div className="vignette-overlay"></div>
                     <Navbar />
                     <Hero />
-                    <Summary />
-                    <Skills />
-                    <Projects />
+                    <ImpactStrip />
                     <Experience />
+                    <Projects />
+                    <CoreCapabilities />
                     <Education />
+                    <Contact />
                     <Footer />
                 </React.Fragment>
             );

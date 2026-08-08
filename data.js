@@ -60,29 +60,17 @@ window.PORTFOLIO_DATA = {
     ],
     companies: [
         {
-            name: "Handshake AI",
-            role: "AI Training Fellow, Project Seal",
-            location: "Remote",
-            duration: "2026 – Present",
-            description: "Adversarial research and red-teaming evaluation on frontier AI models.",
-            achievements: [
-                "Designed and tested adversarial research prompts against frontier AI models to expose reasoning failure modes, focusing on information buried in tabular formats (PDFs/images) and conflicting authoritative sources.",
-                "Analyzed reasoning breakdowns and documented each failure pattern in structured, evidence-based formats for the research team's evaluation pipeline.",
-                "Iterated on prompt design to prioritize novel, high-signal failure modes over repeats of known weaknesses."
-            ],
-            technologies: ["AI Model Evaluation", "Adversarial Red-Teaming", "RLHF", "Data Adjudication"]
-        },
-        {
             name: "micro1",
             role: "Business Operations Specialist (AI Training)",
             location: "Remote",
             duration: "June 2026 – Present",
-            description: "Complex business workflow capture and AI evaluation across enterprise software environments.",
+            focus: "AI Training Operations / AI Data Review",
+            description: "Contributor and reviewer work across enterprise software workflows used to train frontier AI agents.",
             achievements: [
-                "Constructed and captured complex multi-application business workflows across Microsoft Office 365 (Excel, PowerPoint, Word, Teams, Outlook) for training frontier AI agents.",
-                "Evaluated AI-generated outputs against detailed rubrics, verifying active UI states, right-click menus, text highlights, and full-desktop context.",
-                "Managed setup and cataloging of dozens of distinct business workflows, ensuring realistic tests of AI agent capabilities.",
-                "Audited submission quality, provided clear written feedback, and applied iterative reviewer feedback to enhance consistency."
+                "Constructed and captured multi-application business workflows across Excel, PowerPoint, Word, Teams, and Outlook to create realistic training tasks for frontier AI agents.",
+                "Reviewed submitted workflows against detailed evaluation rubrics, verifying active UI states, task completion, right-click menus, text selections, and full-desktop context.",
+                "Identified workflow inconsistencies, task defects, and rubric failures, documenting findings as structured reviewer feedback for quality correction.",
+                "Worked across contributor/trainer and reviewer responsibilities, iterating captured workflows based on evaluator feedback to improve consistency."
             ],
             technologies: ["MS Office 365 Workflows", "AI Agent Auditing", "UI State Verification", "Quality Control"]
         },
@@ -91,12 +79,21 @@ window.PORTFOLIO_DATA = {
             role: "AI Data Operations Specialist (Contract)",
             location: "Remote, Canada",
             duration: "Aug. 2025 – Oct. 2025",
-            description: "Oversaw large-scale AI annotation & evaluation pipeline covering 15,000+ items.",
+            focus: "AI Data Operations / Annotation Quality",
+            description: "Large-scale computer-vision annotation operations, dataset validation, and production AI monitoring.",
+            metrics: [
+                { value: "15,000+", label: "images validated" },
+                { value: "99%+", label: "dataset quality" },
+                { value: "19", label: "systems monitored" },
+                { value: "~30%", label: "shorter QA cycle" },
+                { value: "~35%", label: "faster issue response" }
+            ],
             achievements: [
-                "Oversaw a 15,000+ item pipeline; implemented validation checks and anomaly detection routines that sustained 99%+ accuracy in production.",
-                "Led a 15-member operations team, setting up internal performance leaderboards and coaching team members on quality benchmarks.",
-                "Facilitated cross-functional calibration sessions and designed structured evaluation rubrics that raised evaluation accuracy from 85% to 93%, cutting QA cycle time by 30%.",
-                "Monitored 19 deployed operational systems via real-time Grafana dashboards, preparing daily reports on pipeline health to cut response time by 35%."
+                "Monitored 19 deployed AI systems through Grafana dashboards and produced pipeline-health, performance, and blocker reporting, contributing to approximately 35% faster issue response.",
+                "Validated 15,000+ computer-vision images using dataset checks and anomaly-detection routines, sustaining 99%+ dataset quality.",
+                "Led and coordinated a 15-member annotation operations team, using performance visibility and quality coaching to align work with production benchmarks.",
+                "Ran cross-functional calibration and quality-alignment workflows that improved annotation accuracy from approximately 85% to 93% and reduced QA cycle time by approximately 30%.",
+                "Used Python and SQL in QA and analysis workflows, translating AI implementation details into dashboards, documentation, and operational reporting."
             ],
             technologies: ["Grafana", "Krippendorff's Alpha", "Fleiss' Kappa", "Calibration Rubrics", "Python", "SQL"]
         },
@@ -105,14 +102,35 @@ window.PORTFOLIO_DATA = {
             role: "Associate Project Coordinator (AI/ML Operations)",
             location: "Remote",
             duration: "Dec. 2023 – Feb. 2024",
-            description: "Coordinated ML delivery and client implementations across 4 client accounts and 3 time zones.",
+            focus: "AI/ML Project Coordination",
+            description: "Client-facing coordination for FMCG computer-vision implementations and model delivery workflows.",
+            metrics: [
+                { value: "4", label: "client accounts" },
+                { value: "3", label: "time zones" },
+                { value: "90%+", label: "model accuracy supported" },
+                { value: "~20%", label: "shorter cycle time" }
+            ],
             achievements: [
-                "Coordinated directly with FMCG clients across 4 accounts and 3 time zones to gather requirements, share model outputs, and manage expectations.",
-                "Configured AI implementations for shelf-monitoring and product recognition, supporting 90%+ model accuracy.",
-                "Tracked requests, decisions, and follow-ups across active accounts using Jira Agile boards and Confluence.",
-                "Identified process bottlenecks with ML engineers to streamline model retraining, reducing overall cycle time by 20%."
+                "Coordinated shelf-monitoring and product-recognition implementations across 4 FMCG client accounts and 3 time zones, gathering requirements and communicating model outputs.",
+                "Supported implementation quality monitoring for systems operating at 90%+ model accuracy, coordinating client feedback and acceptance expectations with technical teams.",
+                "Tracked requests, decisions, documentation, and follow-ups through Jira, Confluence, and Agile/Scrum/Kanban workflows.",
+                "Analyzed delivery bottlenecks with ML engineers and coordinated model-retraining work, reducing overall cycle time by approximately 20%."
             ],
             technologies: ["Jira", "Confluence", "Kanban/Scrum", "Client Coordination", "Model Lifecycle"]
+        },
+        {
+            name: "Handshake AI",
+            role: "AI Training Fellow, Project Seal",
+            location: "Remote",
+            duration: "2026 – Present",
+            focus: "AI Evaluation / Adversarial Research",
+            description: "Adversarial research and red-teaming evaluation on frontier AI models.",
+            achievements: [
+                "Designed and tested adversarial research prompts against frontier AI models to expose reasoning failure modes, focusing on information buried in tabular formats (PDFs/images) and conflicting authoritative sources.",
+                "Analyzed reasoning breakdowns and documented each failure pattern in structured, evidence-based formats for the research team's evaluation pipeline.",
+                "Iterated on prompt design to prioritize novel, high-signal failure modes over repeats of known weaknesses."
+            ],
+            technologies: ["AI Model Evaluation", "Adversarial Red-Teaming", "RLHF", "Data Adjudication"]
         }
     ],
     education: [
