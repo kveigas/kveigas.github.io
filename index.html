@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=final-visual-refinement">
 
     <!-- React & Related Libs -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -34,111 +34,6 @@
     <!-- Data Source -->
     <script src="data.js"></script>
 
-    <style>
-        .nav-link {
-            position: relative;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: color 0.3s;
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: -4px;
-            left: 0;
-            background-color: var(--text-primary);
-            transition: width 0.3s;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 2px;
-            background: var(--text-primary);
-            margin-top: 1rem;
-        }
-
-        .tech-tag {
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-            border-radius: 2px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            position: relative;
-            /* For tooltip positioning */
-            cursor: default;
-        }
-
-        /* Tooltip logic moved to React for header clearance detection */
-
-        .tooltip-content {
-            position: absolute;
-            bottom: 125%;
-            /* Above the element */
-            left: 0;
-            width: 300px;
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid var(--accent-highlight);
-            color: #e2e8f0;
-            padding: 1rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            text-transform: none;
-            /* Reset uppercase */
-            pointer-events: none;
-        }
-
-        /* Force Button Colors on Visit/Click - LVHA Order */
-        .btn-primary:visited {
-            color: #000000 !important;
-            background: #ffffff !important;
-        }
-
-        .btn-primary:hover {
-            color: #000000 !important;
-            background: #ffffff !important;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-primary:active,
-        .btn-primary:focus {
-            color: #000000 !important;
-            background: #ffffff !important;
-            transform: translateY(0);
-        }
-    </style>
 </head>
 
 <body>
@@ -345,6 +240,7 @@
         };
 
         const Navbar = () => {
+            const [menuOpen, setMenuOpen] = useState(false);
             const navItems = [
                 { label: 'Experience', href: '#experience' },
                 { label: 'Projects', href: '#projects' },
@@ -353,14 +249,34 @@
                 { label: 'Contact', href: '#contact' }
             ];
 
+            useEffect(() => {
+                const closeOnEscape = (event) => {
+                    if (event.key === 'Escape') setMenuOpen(false);
+                };
+                window.addEventListener('keydown', closeOnEscape);
+                return () => window.removeEventListener('keydown', closeOnEscape);
+            }, []);
+
             return (
                 <nav className="site-nav" aria-label="Primary navigation">
                     <a href="#top" className="site-logo" aria-label="Kevin Veigas home">
                         KV<span style={{ color: 'var(--accent-highlight)' }}>.</span>
                     </a>
-                    <ul className="site-nav-links">
+                    <button
+                        type="button"
+                        className="site-menu-toggle"
+                        aria-expanded={menuOpen}
+                        aria-controls="primary-navigation-links"
+                        aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                        onClick={() => setMenuOpen(open => !open)}
+                    >
+                        <span></span><span></span>
+                    </button>
+                    <ul id="primary-navigation-links" className={`site-nav-links${menuOpen ? ' is-open' : ''}`}>
                         {navItems.map(item => (
-                            <li key={item.href}><a href={item.href} className="nav-link">{item.label}</a></li>
+                            <li key={item.href}>
+                                <a href={item.href} className="nav-link" onClick={() => setMenuOpen(false)}>{item.label}</a>
+                            </li>
                         ))}
                     </ul>
                 </nav>
@@ -505,10 +421,13 @@
         };
 
 
-        const CaseStudySection = ({ title, children }) => (
+        const CaseStudySection = ({ number, title, children }) => (
             <section className="case-study-section">
-                <h4>{title}</h4>
-                {children}
+                <div className="case-study-section-heading">
+                    <span aria-hidden="true">{number}</span>
+                    <h4>{title}</h4>
+                </div>
+                <div className="case-study-section-body">{children}</div>
             </section>
         );
 
@@ -591,16 +510,16 @@
                                 <p className="project-description">{project.description}</p>
 
                                 <div className="project-capabilities">
-                                    <h4>Core capabilities</h4>
+                                    <h4>What it demonstrates</h4>
                                     <ul>
-                                        {project.capabilities.map(capability => (
+                                        {project.capabilities.slice(0, 3).map(capability => (
                                             <li key={capability}>{capability}</li>
                                         ))}
                                     </ul>
                                 </div>
 
                                 <div className="project-methods" aria-label={`${project.title} methods`}>
-                                    {project.methods.map(method => (
+                                    {project.methods.slice(0, 4).map(method => (
                                         <span key={method}>{method}</span>
                                     ))}
                                 </div>
@@ -643,61 +562,67 @@
                                 onClick={(event) => event.stopPropagation()}
                             >
                                 <header className="case-study-header">
-                                    <div>
-                                        <p>{activeProject.category} · Case Study</p>
-                                        <h3 id="case-study-title">{activeProject.caseStudy.title}</h3>
+                                    <div className="case-study-header-copy">
+                                        <p className="case-study-kicker">{activeProject.category} · Case Study</p>
+                                        <h3 id="case-study-title">{activeProject.title}</h3>
+                                        <p className="case-study-subtitle">{activeProject.subtitle}</p>
                                     </div>
                                     <button type="button" className="case-study-close" onClick={closeCaseStudy} aria-label="Close case study">
                                         ×
                                     </button>
                                 </header>
 
-                                <div className="case-study-content">
-                                    <div className="case-study-summary-grid">
-                                        <CaseStudySection title="Problem">
-                                            <p>{activeProject.caseStudy.problem}</p>
-                                        </CaseStudySection>
-                                        <CaseStudySection title="Solution">
-                                            <p>{activeProject.caseStudy.solution}</p>
-                                        </CaseStudySection>
+                                <div className="case-study-scroll">
+                                    <div className="case-study-intro">
+                                        <span>{activeProject.demoUrl ? 'Interactive portfolio prototype' : 'Portfolio prototype · Demo coming soon'}</span>
+                                        <p>{activeProject.description}</p>
                                     </div>
 
-                                    <CaseStudySection title="Workflow">
+                                    <CaseStudySection number="01" title="Problem">
+                                        <p>{activeProject.caseStudy.problem}</p>
+                                    </CaseStudySection>
+
+                                    <CaseStudySection number="02" title="Solution">
+                                        <p>{activeProject.caseStudy.solution}</p>
+                                    </CaseStudySection>
+
+                                    <CaseStudySection number="03" title="Workflow">
                                         <ol className="case-study-workflow">
                                             {activeProject.caseStudy.workflow.map(item => <li key={item}>{item}</li>)}
                                         </ol>
                                     </CaseStudySection>
 
-                                    <div className="case-study-detail-grid">
-                                        <CaseStudySection title="Quality Methods">
-                                            <ul>
-                                                {activeProject.caseStudy.qualityMethods.map(item => <li key={item}>{item}</li>)}
-                                            </ul>
-                                        </CaseStudySection>
-                                        <CaseStudySection title="Technical Implementation">
-                                            <ul>
-                                                {activeProject.caseStudy.technicalImplementation.map(item => <li key={item}>{item}</li>)}
-                                            </ul>
-                                        </CaseStudySection>
-                                    </div>
+                                    <CaseStudySection number="04" title="Quality Methods">
+                                        <ul className="case-study-method-list">
+                                            {activeProject.caseStudy.qualityMethods.map(item => <li key={item}>{item}</li>)}
+                                        </ul>
+                                    </CaseStudySection>
 
-                                    <CaseStudySection title="Why I Built It">
+                                    <CaseStudySection number="05" title="Technical Implementation">
+                                        <ul>
+                                            {activeProject.caseStudy.technicalImplementation.map(item => <li key={item}>{item}</li>)}
+                                        </ul>
+                                    </CaseStudySection>
+
+                                    <CaseStudySection number="06" title="Why I Built It">
                                         <p>{activeProject.caseStudy.whyBuilt}</p>
                                     </CaseStudySection>
 
-                                    <p className="case-study-disclosure">{activeProject.caseStudy.disclosure}</p>
-                                </div>
+                                    <CaseStudySection number="07" title="Project Disclosure">
+                                        <p className="case-study-disclosure">{activeProject.caseStudy.disclosure}</p>
+                                    </CaseStudySection>
 
-                                <footer className="case-study-footer">
-                                    {activeProject.demoUrl ? (
-                                        <a href={activeProject.demoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary project-demo-link">
-                                            Open Live Demo <Icons.External />
-                                        </a>
-                                    ) : (
-                                        <span className="project-coming-soon">Live Demo · Coming Soon</span>
-                                    )}
-                                    <button type="button" className="btn-secondary" onClick={closeCaseStudy}>Close</button>
-                                </footer>
+                                    <footer className="case-study-footer">
+                                        {activeProject.demoUrl ? (
+                                            <a href={activeProject.demoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary project-demo-link">
+                                                Open Live Demo <Icons.External />
+                                            </a>
+                                        ) : (
+                                            <span className="project-coming-soon">Live Demo · Coming Soon</span>
+                                        )}
+                                        <button type="button" className="btn-secondary" onClick={closeCaseStudy}>Close</button>
+                                    </footer>
+                                </div>
                             </article>
                         </div>
                     )}
