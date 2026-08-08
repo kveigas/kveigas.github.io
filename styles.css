@@ -470,6 +470,7 @@ section[id], div[id] {
 
 .hero-text-link {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 0.45rem;
   color: var(--text-secondary);
@@ -807,6 +808,9 @@ section[id], div[id] {
 }
 
 .contact-text-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   padding: 0.55rem 0.35rem;
   color: var(--text-secondary);
   font-size: 0.82rem;
@@ -959,11 +963,6 @@ summary:focus-visible {
 }
 
 @media (max-width: 560px) {
-  .site-nav-links li:nth-child(3),
-  .site-nav-links li:nth-child(4) {
-    display: none;
-  }
-
   .hero-actions {
     align-items: stretch;
   }

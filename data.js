@@ -94,7 +94,7 @@ window.PORTFOLIO_DATA = {
                 "Validated 15,000+ computer-vision images using dataset checks and anomaly-detection routines, sustaining 99%+ dataset quality.",
                 "Led and coordinated a 15-member annotation operations team, using performance visibility and quality coaching to align work with production benchmarks.",
                 "Ran cross-functional calibration and quality-alignment workflows that improved annotation accuracy from approximately 85% to 93% and reduced QA cycle time by approximately 30%.",
-                "Used Python and SQL in QA and analysis workflows, translating AI implementation details into dashboards, documentation, and operational reporting."
+                "Used SQL in QA and analysis workflows, translating AI implementation details into dashboards, documentation, and operational reporting."
             ],
             technologies: ["Grafana", "Krippendorff's Alpha", "Fleiss' Kappa", "Calibration Rubrics", "Python", "SQL"]
         },

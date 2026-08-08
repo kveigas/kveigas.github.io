@@ -26,28 +26,15 @@ Open the local URL printed by the command. You can also open `index.html` direct
 
 ## Deployment
 
-The portfolio is prepared for GitHub-connected Netlify deployment:
+- Repository: <https://github.com/kveigas/kveigas.github.io>
+- Live site: <https://kveigas.github.io>
+- Hosting: GitHub Pages from the `main` branch
 
-- Build command: leave empty
-- Publish directory: `.`
-- Production branch: `main`
-
-The root `netlify.toml` records the portable publish directory. Netlify automatically deploys the current static files after changes are pushed to the connected GitHub production branch.
-
-Do not commit the local `.netlify/` directory. It contains machine-specific Netlify CLI state and is excluded by `.gitignore`.
-
-## Netlify setup
-
-1. Push this folder to a GitHub repository.
-2. In Netlify, choose **Add new project** and import the GitHub repository.
-3. Select the production branch, normally `main`.
-4. Leave the build command empty.
-5. Use `.` as the publish directory.
-6. Deploy the site.
+Updates are deployed by committing the portfolio changes and pushing the `main` branch to GitHub. GitHub Pages then publishes the repository's static files directly; no build command is required.
 
 ## Separate project deployments
 
-DataQual is deployed separately at:
+DataQual is hosted separately at:
 
 <https://subtle-kashata-db5525.netlify.app>
 
@@ -62,7 +49,6 @@ Ghost Oort is not deployed from this portfolio repository. It requires its own s
 ├── styles.css       # Site styling
 ├── favicon.svg      # Browser icon
 ├── icons.svg        # SVG icon asset
-├── netlify.toml     # Portable Netlify publish configuration
 ├── .gitignore       # Local-file exclusions
 └── README.md        # Project and deployment documentation
 ```
