@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=targeted-cta-refinement">
+    <link rel="stylesheet" href="styles.css?v=wave-background-restoration">
 
     <!-- React & Related Libs -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -54,7 +54,7 @@
             MapPin: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
         };
 
-        // --- 3D Background (Dual Waves + Morphing Globe) ---
+        // --- 3D Signature Visual (Dual Waves + Morphing Particle Globe) ---
         const WaveBackground = () => {
             useEffect(() => {
                 const container = document.getElementById('canvas-container');
@@ -62,178 +62,209 @@
                 while (container.firstChild) container.removeChild(container.firstChild);
 
                 const scene = new THREE.Scene();
-
-                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 120);
+                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
                 renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+                renderer.setClearColor(0x000000, 0);
                 container.appendChild(renderer.domElement);
 
-                // --- Helper Phase: Create Wave ---
-                const createWave = (color, yPos, speedX, phaseOffset) => {
-                    const SEPARATION = 1.3;
-                    const AMOUNTX = 50;
-                    const AMOUNTY = 50;
-                    const numParticles = AMOUNTX * AMOUNTY;
-                    const positions = new Float32Array(numParticles * 3);
-                    let i = 0;
-                    for (let ix = 0; ix < AMOUNTX; ix++) {
-                        for (let iy = 0; iy < AMOUNTY; iy++) {
-                            positions[i] = ix * SEPARATION - ((AMOUNTX * SEPARATION) / 2);
-                            positions[i + 1] = 0;
-                            positions[i + 2] = iy * SEPARATION - ((AMOUNTY * SEPARATION) / 2);
-                            i += 3;
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const isMobile = window.innerWidth < 700;
+                const waveResolution = isMobile ? 34 : 50;
+                const globeParticleCount = isMobile ? 1050 : 1800;
+                const disposables = [];
+
+                const createWave = (color, opacity, phase, rotationDirection, zPosition) => {
+                    const separation = isMobile ? 1.45 : 1.3;
+                    const particleCount = waveResolution * waveResolution;
+                    const positions = new Float32Array(particleCount * 3);
+                    let index = 0;
+
+                    for (let x = 0; x < waveResolution; x++) {
+                        for (let z = 0; z < waveResolution; z++) {
+                            positions[index] = x * separation - (waveResolution * separation) / 2;
+                            positions[index + 1] = 0;
+                            positions[index + 2] = z * separation - (waveResolution * separation) / 2;
+                            index += 3;
                         }
                     }
+
                     const geometry = new THREE.BufferGeometry();
                     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
                     const material = new THREE.PointsMaterial({
-                        color: color,
-                        size: 0.12,
+                        color,
+                        size: isMobile ? 0.12 : 0.135,
                         transparent: true,
-                        opacity: 0.7
+                        opacity,
+                        depthWrite: false,
+                        blending: THREE.AdditiveBlending
                     });
-                    const particles = new THREE.Points(geometry, material);
-                    particles.position.y = yPos;
-                    scene.add(particles);
-                    return { mesh: particles, speedX: speedX, phase: phaseOffset, amountX: AMOUNTX, amountY: AMOUNTY };
+                    const mesh = new THREE.Points(geometry, material);
+                    mesh.position.set(0, phase === 0 ? -4.2 : -2.75, zPosition);
+                    mesh.rotation.x = phase === 0 ? -0.12 : -0.2;
+                    mesh.rotation.z = phase === 0 ? 0.035 : -0.045;
+                    scene.add(mesh);
+                    disposables.push(geometry, material);
+                    return { mesh, phase, rotationDirection, positions };
                 };
 
-                const whiteWave = createWave(0xffffff, -5, 0.03, 0);
-                const greenWave = createWave(0x10b981, -5, -0.03, 10);
+                const whiteWave = createWave(0xe7f1f4, 0.4, 0, 1, -11);
+                const greenWave = createWave(0x43d6a4, 0.52, 9.5, -1, -15);
+                const waves = [whiteWave, greenWave];
 
-                // --- Helper Phase: Create Morphing Globe ---
-                // We manually create points to control their "unravel" state
-                const globeParticleCount = 1800;
-                const globeGeo = new THREE.BufferGeometry();
-                const globePos = new Float32Array(globeParticleCount * 3);
-                const globeOrigins = new Float32Array(globeParticleCount * 3); // Store sphere state
-                const globeDestinations = new Float32Array(globeParticleCount * 3); // Store unraveled state
+                const globeGeometry = new THREE.BufferGeometry();
+                const globePositions = new Float32Array(globeParticleCount * 3);
+                const globeOrigins = new Float32Array(globeParticleCount * 3);
+                const globeDestinations = new Float32Array(globeParticleCount * 3);
+                const globeRadius = isMobile ? 5.1 : 6.25;
 
-                const radius = 7;
+                // A deterministic generator preserves a stable composition between visits.
+                let randomState = 17431;
+                const seededRandom = () => {
+                    randomState = (randomState * 16807) % 2147483647;
+                    return (randomState - 1) / 2147483646;
+                };
+
                 for (let i = 0; i < globeParticleCount; i++) {
-                    // Spherical coordinates (Golden Spiral) to distribute points evenly
                     const phi = Math.acos(-1 + (2 * i) / globeParticleCount);
                     const theta = Math.sqrt(globeParticleCount * Math.PI) * phi;
+                    const x = globeRadius * Math.cos(theta) * Math.sin(phi);
+                    const y = globeRadius * Math.sin(theta) * Math.sin(phi);
+                    const z = globeRadius * Math.cos(phi);
+                    const index = i * 3;
 
-                    const x = radius * Math.cos(theta) * Math.sin(phi);
-                    const y = radius * Math.sin(theta) * Math.sin(phi);
-                    const z = radius * Math.cos(phi);
+                    globeOrigins[index] = globePositions[index] = x;
+                    globeOrigins[index + 1] = globePositions[index + 1] = y;
+                    globeOrigins[index + 2] = globePositions[index + 2] = z;
 
-                    // Origin (Sphere)
-                    globeOrigins[i * 3] = x;
-                    globeOrigins[i * 3 + 1] = y;
-                    globeOrigins[i * 3 + 2] = z;
-
-                    // Start at origin
-                    globePos[i * 3] = x;
-                    globePos[i * 3 + 1] = y;
-                    globePos[i * 3 + 2] = z;
-
-                    // Destination (Unraveled / Spiral Cloud)
-                    // We make a larger, wider spiral
-                    const spiralScale = 0.5;
-                    globeDestinations[i * 3] = x * 2 + (Math.random() - 0.5) * 10;
-                    globeDestinations[i * 3 + 1] = y * 2 + (Math.random() - 0.5) * 10;
-                    globeDestinations[i * 3 + 2] = z * 2 + (Math.random() - 0.5) * 10;
+                    const cloudScale = 1.72 + 0.16 * Math.sin(phi * 5 + theta * 0.04);
+                    const spiral = (i / globeParticleCount) * Math.PI * 5;
+                    const spread = isMobile ? 2.8 : 4.2;
+                    globeDestinations[index] = x * cloudScale + Math.cos(spiral) * spread + (seededRandom() - 0.5) * spread;
+                    globeDestinations[index + 1] = y * cloudScale + Math.sin(spiral * 0.7) * spread + (seededRandom() - 0.5) * spread;
+                    globeDestinations[index + 2] = z * cloudScale + Math.sin(spiral) * spread + (seededRandom() - 0.5) * spread;
                 }
 
-                globeGeo.setAttribute('position', new THREE.BufferAttribute(globePos, 3));
-                const globeMat = new THREE.PointsMaterial({
-                    color: 0x34d399,
-                    size: 0.1,
+                globeGeometry.setAttribute('position', new THREE.BufferAttribute(globePositions, 3));
+                const globeMaterial = new THREE.PointsMaterial({
+                    color: 0x43d6a4,
+                    size: isMobile ? 0.09 : 0.105,
                     transparent: true,
-                    opacity: 0.8,
+                    opacity: 0.82,
+                    depthWrite: false,
                     blending: THREE.AdditiveBlending
                 });
-                const globeMesh = new THREE.Points(globeGeo, globeMat);
-                globeMesh.position.y = 0; // Explicitly center vertically
+                const globeMesh = new THREE.Points(globeGeometry, globeMaterial);
                 scene.add(globeMesh);
+                disposables.push(globeGeometry, globeMaterial);
 
-                camera.position.y = 4; // Slightly lower angle for better center alignment
-                camera.position.z = 25;
+                camera.position.set(0, 3.5, 26);
                 camera.lookAt(0, 0, 0);
 
-                // Scroll Tracker
                 let scrollY = 0;
                 const handleScroll = () => {
                     scrollY = window.scrollY;
                 };
                 window.addEventListener('scroll', handleScroll);
 
-                let count = 0;
-                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 let animationFrameId = null;
+                let previousTimestamp = null;
+                let elapsed = 0;
+                let layoutY = -0.2;
 
-                const animate = () => {
-                    if (!reduceMotion) {
-                        animationFrameId = requestAnimationFrame(animate);
-                    }
+                const applyLayout = () => {
+                    const mobileLayout = window.innerWidth < 700;
+                    const tabletLayout = window.innerWidth < 1100;
+                    globeMesh.position.x = mobileLayout ? 4.6 : (tabletLayout ? 5.8 : 7.2);
+                    layoutY = mobileLayout ? -0.8 : (tabletLayout ? -0.55 : -0.2);
+                    const scale = mobileLayout ? 0.84 : (tabletLayout ? 0.92 : 1);
+                    globeMesh.scale.setScalar(scale);
+                };
+                applyLayout();
 
-                    // 1. Animate Waves
-                    [whiteWave, greenWave].forEach(wave => {
-                        const positions = wave.mesh.geometry.attributes.position.array;
-                        let i = 0;
-                        for (let ix = 0; ix < wave.amountX; ix++) {
-                            for (let iy = 0; iy < wave.amountY; iy++) {
-                                const value = (Math.sin((ix + count + wave.phase) * 0.3) * 1.5) +
-                                    (Math.sin((iy + count + wave.phase) * 0.5) * 1.5);
-                                positions[i + 1] = value;
-                                i += 3;
+                const renderFrame = (time) => {
+                    waves.forEach(wave => {
+                        let index = 0;
+                        for (let x = 0; x < waveResolution; x++) {
+                            for (let z = 0; z < waveResolution; z++) {
+                                wave.positions[index + 1] =
+                                    Math.sin((x + time * 3.2 + wave.phase) * 0.3) * 1.45 +
+                                    Math.sin((z + time * 2.35 + wave.phase) * 0.5) * 1.35;
+                                index += 3;
                             }
                         }
                         wave.mesh.geometry.attributes.position.needsUpdate = true;
+                        wave.mesh.rotation.y = wave.rotationDirection * time * 0.018;
                     });
 
-                    whiteWave.mesh.rotation.y += 0.001;
-                    greenWave.mesh.rotation.y -= 0.001;
-
-                    // 2. Animate Globe Morphing (Unraveling)
-                    const morphTime = count * 0.5;
-                    let morphFactor = (Math.sin(morphTime) + 1) / 2; // 0 -> 1 -> 0
-
-                    // Non-linear easing for "Pop" effect
-                    morphFactor = Math.pow(morphFactor, 2);
-
-                    const gPositions = globeMesh.geometry.attributes.position.array;
+                    // Begin fully formed, unravel, then reform over a slow 13-second cycle.
+                    const rawMorph = (Math.sin(time * 0.48 - Math.PI / 2) + 1) / 2;
+                    const morphFactor = rawMorph * rawMorph;
                     for (let i = 0; i < globeParticleCount; i++) {
-                        const ix = i * 3;
-                        const iy = i * 3 + 1;
-                        const iz = i * 3 + 2;
-
-                        // Lerp between Origin and Destination
-                        gPositions[ix] = globeOrigins[ix] + (globeDestinations[ix] - globeOrigins[ix]) * morphFactor;
-                        gPositions[iy] = globeOrigins[iy] + (globeDestinations[iy] - globeOrigins[iy]) * morphFactor;
-                        gPositions[iz] = globeOrigins[iz] + (globeDestinations[iz] - globeOrigins[iz]) * morphFactor;
+                        const index = i * 3;
+                        globePositions[index] = globeOrigins[index] + (globeDestinations[index] - globeOrigins[index]) * morphFactor;
+                        globePositions[index + 1] = globeOrigins[index + 1] + (globeDestinations[index + 1] - globeOrigins[index + 1]) * morphFactor;
+                        globePositions[index + 2] = globeOrigins[index + 2] + (globeDestinations[index + 2] - globeOrigins[index + 2]) * morphFactor;
                     }
-                    globeMesh.geometry.attributes.position.needsUpdate = true;
+                    globeGeometry.attributes.position.needsUpdate = true;
+                    globeMesh.rotation.y = time * 0.11;
+                    globeMesh.rotation.z = Math.sin(time * 0.16) * 0.045;
+                    globeMesh.position.y = layoutY - scrollY * 0.006;
 
-                    // Rotate the entire globe group
-                    globeMesh.rotation.y += 0.002;
-
-                    // 3. Scroll Floating (Parallax)
-                    // Start at 0 (Center), drift down slightly as user scrolls
-                    const targetY = 0 - (scrollY * 0.012);
-                    globeMesh.position.y += (targetY - globeMesh.position.y) * 0.05;
-
-                    count += 0.02;
+                    const pageFade = Math.max(0.12, 1 - scrollY / 1200);
+                    whiteWave.mesh.material.opacity = 0.4 * pageFade;
+                    greenWave.mesh.material.opacity = 0.52 * pageFade;
+                    globeMaterial.opacity = 0.82 * pageFade;
                     renderer.render(scene, camera);
                 };
-                animate();
 
-                // Cleanup
+                const animate = (timestamp) => {
+                    if (previousTimestamp === null) previousTimestamp = timestamp;
+                    elapsed += Math.min((timestamp - previousTimestamp) / 1000, 0.05);
+                    previousTimestamp = timestamp;
+                    renderFrame(elapsed);
+                    animationFrameId = requestAnimationFrame(animate);
+                };
+
+                const startAnimation = () => {
+                    if (reduceMotion || animationFrameId !== null || document.hidden) return;
+                    previousTimestamp = null;
+                    animationFrameId = requestAnimationFrame(animate);
+                };
+
+                const stopAnimation = () => {
+                    if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                };
+
+                const handleVisibilityChange = () => {
+                    if (document.hidden) stopAnimation();
+                    else startAnimation();
+                };
+
+                if (reduceMotion) renderFrame(0);
+                else startAnimation();
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+
                 const handleResize = () => {
                     camera.aspect = window.innerWidth / window.innerHeight;
                     camera.updateProjectionMatrix();
                     renderer.setSize(window.innerWidth, window.innerHeight);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+                    applyLayout();
+                    if (reduceMotion) renderFrame(0);
                 }
                 window.addEventListener('resize', handleResize);
 
                 return () => {
-                    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                    stopAnimation();
                     window.removeEventListener('resize', handleResize);
                     window.removeEventListener('scroll', handleScroll);
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                    disposables.forEach(item => item.dispose());
                     renderer.dispose();
+                    if (renderer.domElement.parentNode === container) container.removeChild(renderer.domElement);
                 };
             }, []);
             return null;
