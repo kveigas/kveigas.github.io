@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=final-visual-refinement">
+    <link rel="stylesheet" href="styles.css?v=targeted-cta-refinement">
 
     <!-- React & Related Libs -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -297,7 +297,7 @@
                         </p>
                         <p className="hero-status">
                             <span className="status-dot" aria-hidden="true"></span>
-                            Mangaluru, India <span aria-hidden="true">·</span> Open to Remote &amp; Global Opportunities
+                            Open to Remote &amp; Global Opportunities
                         </p>
 
                         <div className="hero-actions" aria-label="Homepage actions">
@@ -306,10 +306,10 @@
                         </div>
 
                         <div className="hero-resource-links">
-                            <a href={`mailto:${personal.email}?subject=Resume Request`} className="hero-text-link">
+                            <a href={`mailto:${personal.email}?subject=Resume Request`} className="btn-tertiary btn-compact hero-text-link">
                                 Request Resume
                             </a>
-                            <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="hero-text-link">
+                            <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="btn-tertiary btn-compact hero-text-link">
                                 <Icons.Linkedin /> LinkedIn
                             </a>
                         </div>
@@ -527,7 +527,7 @@
                                 <div className="project-actions">
                                     <button
                                         type="button"
-                                        className="btn-secondary project-case-study-button"
+                                        className="btn-primary btn-compact project-case-study-button"
                                         onClick={(event) => openCaseStudy(project, event)}
                                     >
                                         View Case Study
@@ -537,7 +537,7 @@
                                             href={project.demoUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="btn-primary project-demo-link"
+                                            className="btn-secondary btn-compact project-demo-link"
                                         >
                                             {project.demoLabel} <Icons.External />
                                         </a>
@@ -690,7 +690,7 @@
                             <a href={`mailto:${personal.email}`} className="btn-secondary">
                                 <Icons.Mail /> Email
                             </a>
-                            <a href={resumeHref} className="contact-text-link">
+                            <a href={resumeHref} className="btn-tertiary">
                                 Request Resume
                             </a>
                         </div>
