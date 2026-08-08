@@ -155,23 +155,95 @@ window.PORTFOLIO_DATA = {
     ],
     projects: [
         {
-            id: "dataqual-v3",
-            title: "DataQual v3.0: Enterprise Annotation Quality & Active Learning Intelligence",
-            description: "State-of-the-art AI data annotation quality management platform featuring Active Learning sampling (BADGE/BALD), statistical agreement metrics (Krippendorff's Alpha, Gwet's AC1), Dawid-Skene competence modeling, LLM anchoring bias safeguards, weak supervision (Snorkel paradigm), and live CSV/JSON data ingestion.",
-            detailedDescription: "Architected to solve dataset quality degradation, annotator fatigue, and labeling bottlenecks in enterprise AI pipelines. DataQual v3.0 unifies statistical consensus algorithms (Krippendorff's Alpha, Gwet's AC1, MACE), Bayesian competence estimation (Dawid-Skene EM), active learning latent space projections (BADGE/BALD), LLM pre-annotation disposition tracking, and programmatic labeling function IDEs into a dark-mode intelligence suite.",
-            tags: ["React 18", "Active Learning (BADGE/BALD)", "Krippendorff's Alpha", "Gwet's AC1", "Dawid-Skene EM", "Snorkel Weak Supervision", "Statistical QC", "Data Ingestion (.CSV/.JSON)"],
+            id: "dataqual",
+            title: "DataQual",
+            subtitle: "Annotation Quality Intelligence Platform",
+            category: "General Annotation Quality",
+            description: "An interactive portfolio prototype for monitoring annotation quality, investigating disagreement, and prioritizing review across supervised labeling workflows.",
+            capabilities: [
+                "Annotator quality ranking and performance visibility",
+                "Agreement, consensus, and adjudication workflows",
+                "Active-learning sampling with configurable strategies",
+                "AI-assist acceptance and anchoring-risk monitoring",
+                "Fairness auditing, weak supervision, and CSV/JSON input"
+            ],
+            methods: ["Krippendorff's Alpha", "Gwet's AC1", "Dawid-Skene", "MACE", "BADGE / BALD", "Snorkel-style rules"],
+            technologies: ["React 18", "Browser JavaScript", "Babel", "Local storage", "CSV / JSON"],
             demoUrl: "https://subtle-kashata-db5525.netlify.app",
+            demoLabel: "Live Demo",
             featured: true,
             caseStudy: {
-                title: "DataQual v3.0 — Enterprise AI Annotation Quality & Active Learning Case Study",
-                problem: "Large-scale AI annotation pipelines suffer from undetected annotator drift, guideline ambiguity, class imbalance, and human over-reliance on AI pre-annotations (anchoring bias), leading to costly model retraining cycles.",
-                solution: "Engineered DataQual v3.0 — an end-to-end quality intelligence system integrating Active Learning acquisition queues (BADGE/BALD), Bayesian consensus algorithms (Dawid-Skene EM, MACE), LLM anchoring bias monitors, demographic parity audit tables, and weak supervision rules.",
-                impact: [
-                    "Achieved 3.4x Annotation ROI boost by prioritizing high-uncertainty samples via BADGE active learning.",
-                    "Sustained 99%+ production dataset accuracy across 15,000+ item complex evaluation pipelines.",
-                    "Eliminated anchoring bias skews by enforcing blind review triggers when AI acceptance exceeded 85%.",
-                    "Cut QA rework cycle time by 30% through real-time Krippendorff's Alpha and Gwet's AC1 drift tracking."
-                ]
+                title: "DataQual - Annotation Quality Intelligence",
+                problem: "Annotation operations need one place to see reviewer performance, surface disagreement, inspect possible bias, and decide which items deserve attention. These signals are often split across spreadsheets, scripts, and disconnected dashboards.",
+                solution: "DataQual brings those operational views into a single browser-based prototype. It models how a quality lead could move from dataset intake to agreement review, adjudication, targeted sampling, and ongoing monitoring.",
+                workflow: [
+                    "Load or enter annotator data using JSON, CSV, or the in-app form.",
+                    "Review quality ranking, throughput, agreement, and consensus views.",
+                    "Route disagreements into an adjudication queue for resolution.",
+                    "Prioritize uncertain examples through the smart-sampling workspace.",
+                    "Monitor AI-assist acceptance patterns and subgroup quality signals."
+                ],
+                qualityMethods: [
+                    "Agreement views labeled for Krippendorff's Alpha and Gwet's AC1",
+                    "Dawid-Skene and MACE-style annotator competence views",
+                    "BADGE, BALD, BatchBALD, and coreset sampling options",
+                    "Anchoring-risk alerts based on AI-suggestion acceptance behavior",
+                    "Snorkel-style labeling-function coverage and conflict checks"
+                ],
+                technicalImplementation: [
+                    "Single-page React 18 interface loaded through CDN scripts",
+                    "Client-side state with browser local storage",
+                    "Browser-based CSV and JSON parsing with no backend dependency",
+                    "Responsive modules for ranking, consensus, sampling, fairness, and data programming"
+                ],
+                whyBuilt: "I built DataQual to demonstrate how annotation-quality methods can be translated into practical operational interfaces: clear monitoring, review queues, decision support, and traceable QA workflows.",
+                disclosure: "This is a portfolio prototype. Dashboard records, projected returns, and quality scores are demonstration data. Some displayed statistics are simplified client-side models rather than independently validated production estimators."
+            }
+        },
+        {
+            id: "ghost-oort",
+            title: "Ghost Oort",
+            subtitle: "RLHF Annotation Quality Platform",
+            category: "Preference Data / RLHF",
+            description: "A portfolio prototype for collecting pairwise preference judgments, monitoring annotator reliability, focusing review on disagreement, and simulating reward-model workflows.",
+            capabilities: [
+                "Side-by-side pairwise preference ranking",
+                "Confidence capture for human preference judgments",
+                "Agreement and annotator reliability monitoring",
+                "Entropy-based sampling for uncertain comparisons",
+                "Reward-model and drift-monitoring simulations"
+            ],
+            methods: ["Krippendorff's Alpha", "Fleiss' Kappa", "Dawid-Skene", "MACE", "Entropy sampling", "Logistic regression"],
+            technologies: ["Compiled React interface", "Client-side simulation", "Responsive data visualizations"],
+            demoUrl: null,
+            demoLabel: "Coming Soon",
+            featured: true,
+            caseStudy: {
+                title: "Ghost Oort - RLHF Annotation Quality",
+                problem: "Preference-data programs need more than a ranking form. Teams also need to understand annotator consistency, concentrate effort on ambiguous response pairs, and monitor whether collected preferences remain stable enough to support reward-model development.",
+                solution: "Ghost Oort models an RLHF-focused quality workspace that combines pairwise response comparison, confidence capture, agreement monitoring, uncertainty sampling, and a simulated reward-model pipeline.",
+                workflow: [
+                    "Upload prompt-response pairs for preference review.",
+                    "Compare two responses side by side and record a preference with confidence.",
+                    "Track agreement and annotator reliability across collected judgments.",
+                    "Prioritize uncertain comparisons through entropy-based sampling.",
+                    "Inspect simulated reward-model and drift-monitoring views."
+                ],
+                qualityMethods: [
+                    "Krippendorff's Alpha and Fleiss' Kappa agreement views",
+                    "Dawid-Skene and MACE-style preference aggregation",
+                    "Entropy-based uncertainty sampling",
+                    "Logistic-regression reward-model simulation",
+                    "SPC-style drift monitoring and alerts"
+                ],
+                technicalImplementation: [
+                    "Compiled client-side React prototype",
+                    "Interactive preference-ranking and annotator-tracking views",
+                    "Simulated active-learning and reward-model modules",
+                    "No production backend or public deployment is currently connected"
+                ],
+                whyBuilt: "I built Ghost Oort to explore the quality-operations layer specific to preference data: how human rankings are collected, where annotators disagree, and how those signals can guide review and reward-model experimentation.",
+                disclosure: "This is an undeployed portfolio prototype. Its model outputs, alerts, and efficiency figures are simulations and are not presented as measured production outcomes."
             }
         }
     ]
