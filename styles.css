@@ -357,6 +357,11 @@ main > section:not(.hero-section):not(.impact-section) { padding-block: 104px; }
 .experience-metric span { display: block; color: var(--color-text-muted); font-size: 0.69rem; line-height: 1.3; }
 
 .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.project-grid:has(> .project-card:only-child) {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 860px;
+    margin-inline: auto;
+}
 .project-card {
     position: relative;
     display: flex;

@@ -318,52 +318,6 @@ window.PORTFOLIO_DATA = {
                 },
                 keyTakeaway: "DataQual demonstrates an evidence-first approach to human-data operations: preserve provenance, quantify uncertainty, separate disagreement causes, compare assumptions, and prioritize review effort without hiding methodological failures or negative benchmark results."
             }
-        },
-        {
-            id: "ghost-oort",
-            title: "Ghost Oort",
-            subtitle: "RLHF Annotation Quality Platform",
-            category: "Preference Data / RLHF",
-            description: "A portfolio prototype for collecting pairwise preference judgments, monitoring annotator reliability, focusing review on disagreement, and simulating reward-model workflows.",
-            capabilities: [
-                "Side-by-side pairwise preference ranking",
-                "Confidence capture for human preference judgments",
-                "Agreement and annotator reliability monitoring",
-                "Entropy-based sampling for uncertain comparisons",
-                "Reward-model and drift-monitoring simulations"
-            ],
-            methods: ["Krippendorff's Alpha", "Fleiss' Kappa", "Dawid-Skene", "MACE", "Entropy sampling", "Logistic regression"],
-            technologies: ["Compiled React interface", "Client-side simulation", "Responsive data visualizations"],
-            demoUrl: null,
-            demoLabel: "Coming Soon",
-            featured: true,
-            caseStudy: {
-                title: "Ghost Oort - RLHF Annotation Quality",
-                problem: "Preference-data programs need more than a ranking form. Teams also need to understand annotator consistency, concentrate effort on ambiguous response pairs, and monitor whether collected preferences remain stable enough to support reward-model development.",
-                solution: "Ghost Oort models an RLHF-focused quality workspace that combines pairwise response comparison, confidence capture, agreement monitoring, uncertainty sampling, and a simulated reward-model pipeline.",
-                workflow: [
-                    "Upload prompt-response pairs for preference review.",
-                    "Compare two responses side by side and record a preference with confidence.",
-                    "Track agreement and annotator reliability across collected judgments.",
-                    "Prioritize uncertain comparisons through entropy-based sampling.",
-                    "Inspect simulated reward-model and drift-monitoring views."
-                ],
-                qualityMethods: [
-                    "Krippendorff's Alpha and Fleiss' Kappa agreement views",
-                    "Dawid-Skene and MACE-style preference aggregation",
-                    "Entropy-based uncertainty sampling",
-                    "Logistic-regression reward-model simulation",
-                    "SPC-style drift monitoring and alerts"
-                ],
-                technicalImplementation: [
-                    "Compiled client-side React prototype",
-                    "Interactive preference-ranking and annotator-tracking views",
-                    "Simulated active-learning and reward-model modules",
-                    "No production backend or public deployment is currently connected"
-                ],
-                whyBuilt: "I built Ghost Oort to explore the quality-operations layer specific to preference data: how human rankings are collected, where annotators disagree, and how those signals can guide review and reward-model experimentation.",
-                disclosure: "This is an undeployed portfolio prototype. Its model outputs, alerts, and efficiency figures are simulations and are not presented as measured production outcomes."
-            }
         }
     ]
 };
