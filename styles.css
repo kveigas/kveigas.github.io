@@ -78,10 +78,9 @@ button { font: inherit; }
     z-index: 0;
     inset: 0;
     pointer-events: none;
-    opacity: 0.90;
-    filter: saturate(1.15) drop-shadow(0 0 24px rgba(15, 118, 110, 0.25));
-    -webkit-mask-image: radial-gradient(ellipse 65% 85% at 35% 45%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.85) 50%, #000 100%);
-    mask-image: radial-gradient(ellipse 65% 85% at 35% 45%, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.85) 50%, #000 100%);
+    opacity: 1.0;
+    -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, #000 0%, #000 80%, rgba(0, 0, 0, 0.4) 100%);
+    mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, #000 0%, #000 80%, rgba(0, 0, 0, 0.4) 100%);
 }
 
 .vignette-overlay {
@@ -614,9 +613,9 @@ main > section:not(.hero-section):not(.impact-section) { padding-block: 104px; }
     main > section:not(.hero-section):not(.impact-section) { padding-block: 78px; }
     .site-nav { padding-inline: 18px; }
     #canvas-container {
-        opacity: 0.86;
-        -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.65) 46%, rgba(0, 0, 0, 0.92) 74%, #000 100%);
-        mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.65) 46%, rgba(0, 0, 0, 0.92) 74%, #000 100%);
+        opacity: 1.0;
+        -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 85%, rgba(0, 0, 0, 0.4) 100%);
+        mask-image: linear-gradient(180deg, #000 0%, #000 85%, rgba(0, 0, 0, 0.4) 100%);
     }
     .hero-section::before {
         background: linear-gradient(90deg, rgba(5, 8, 13, 0.9) 0%, rgba(5, 8, 13, 0.67) 56%, rgba(5, 8, 13, 0.16) 88%, transparent);
