@@ -538,22 +538,32 @@
                                     <p>{project.subtitle}</p>
                                 </div>
 
+                                {project.image && (
+                                    <div className="project-card-media">
+                                        <img src={project.image} alt={`${project.title} Overview`} className="project-card-thumbnail" loading="lazy" />
+                                    </div>
+                                )}
+
                                 <p className="project-description">{project.description}</p>
 
-                                <div className="project-capabilities">
-                                    <h4>What it demonstrates</h4>
-                                    <ul>
-                                        {project.capabilities.slice(0, 3).map(capability => (
-                                            <li key={capability}>{capability}</li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                {project.capabilities && project.capabilities.length > 0 && typeof project.capabilities[0] === 'string' && (
+                                    <div className="project-capabilities">
+                                        <h4>What it demonstrates</h4>
+                                        <ul>
+                                            {project.capabilities.slice(0, 3).map(capability => (
+                                                <li key={capability}>{capability}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
 
-                                <div className="project-methods" aria-label={`${project.title} methods`}>
-                                    {project.methods.slice(0, 4).map(method => (
-                                        <span key={method}>{method}</span>
-                                    ))}
-                                </div>
+                                {project.methods && project.methods.length > 0 && (
+                                    <div className="project-methods" aria-label={`${project.title} methods`}>
+                                        {project.methods.slice(0, 4).map(method => (
+                                            <span key={method}>{method}</span>
+                                        ))}
+                                    </div>
+                                )}
 
                                 <div className="project-actions">
                                     <button
@@ -563,7 +573,7 @@
                                     >
                                         View Case Study
                                     </button>
-                                    {project.demoUrl ? (
+                                    {project.demoUrl && (
                                         <a
                                             href={project.demoUrl}
                                             target="_blank"
@@ -572,7 +582,18 @@
                                         >
                                             {project.demoLabel} <Icons.External />
                                         </a>
-                                    ) : (
+                                    )}
+                                    {project.githubUrl && (
+                                        <a
+                                            href={project.githubUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn-secondary btn-compact project-github-link"
+                                        >
+                                            GitHub <Icons.External />
+                                        </a>
+                                    )}
+                                    {!project.demoUrl && !project.githubUrl && (
                                         <span className="project-coming-soon" aria-label={`${project.title} live demo coming soon`}>
                                             Live Demo · {project.demoLabel}
                                         </span>
@@ -604,52 +625,167 @@
                                 </header>
 
                                 <div className="case-study-scroll">
-                                    <div className="case-study-intro">
-                                        <span>{activeProject.demoUrl ? 'Interactive portfolio prototype' : 'Portfolio prototype · Demo coming soon'}</span>
-                                        <p>{activeProject.description}</p>
-                                    </div>
+                                    {activeProject.id === "dataqual" ? (
+                                        <React.Fragment>
+                                            {/* A. Problem / Operational Context */}
+                                            <CaseStudySection number="01" title="Problem / Operational Context">
+                                                <p>{activeProject.caseStudy.problem}</p>
+                                            </CaseStudySection>
 
-                                    <CaseStudySection number="01" title="Problem">
-                                        <p>{activeProject.caseStudy.problem}</p>
-                                    </CaseStudySection>
+                                            {/* B. What DataQual Does */}
+                                            <CaseStudySection number="02" title="What DataQual Does">
+                                                <div className="case-study-narrative">
+                                                    {activeProject.caseStudy.solution.split('\n\n').map((paragraph, idx) => (
+                                                        <p key={idx} style={{ marginBottom: idx < activeProject.caseStudy.solution.split('\n\n').length - 1 ? '12px' : 0 }}>{paragraph}</p>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
 
-                                    <CaseStudySection number="02" title="Solution">
-                                        <p>{activeProject.caseStudy.solution}</p>
-                                    </CaseStudySection>
+                                            {/* C. Key Capabilities */}
+                                            <CaseStudySection number="03" title="Key Capabilities">
+                                                <div className="case-study-capabilities-grid">
+                                                    {activeProject.caseStudy.capabilities.map((capGroup, idx) => (
+                                                        <div className="case-study-cap-card" key={idx}>
+                                                            <h5>{capGroup.domain}</h5>
+                                                            <ul>
+                                                                {capGroup.items.map((item, itemIdx) => (
+                                                                    <li key={itemIdx}>{item}</li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
 
-                                    <CaseStudySection number="03" title="Workflow">
-                                        <ol className="case-study-workflow">
-                                            {activeProject.caseStudy.workflow.map(item => <li key={item}>{item}</li>)}
-                                        </ol>
-                                    </CaseStudySection>
+                                            {/* D. Selected Product Screenshots */}
+                                            <CaseStudySection number="04" title="Selected Product Screenshots">
+                                                <div className="case-study-gallery">
+                                                    {activeProject.caseStudy.screenshots.map((shot) => (
+                                                        <figure key={shot.id} className="case-study-figure">
+                                                            <div className="case-study-img-wrap">
+                                                                <img src={shot.src} alt={shot.alt} loading="lazy" />
+                                                            </div>
+                                                            <figcaption className="case-study-caption">
+                                                                <strong>{shot.label}</strong> — {shot.caption}
+                                                            </figcaption>
+                                                        </figure>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
 
-                                    <CaseStudySection number="04" title="Quality Methods">
-                                        <ul className="case-study-method-list">
-                                            {activeProject.caseStudy.qualityMethods.map(item => <li key={item}>{item}</li>)}
-                                        </ul>
-                                    </CaseStudySection>
+                                            {/* E. Validation & Methodological Rigor */}
+                                            <CaseStudySection number="05" title="Validation & Methodological Rigor">
+                                                <div className="case-study-validation-grid">
+                                                    <div className="case-study-val-card">
+                                                        <h5>{activeProject.caseStudy.validation.compatibility.title}</h5>
+                                                        <p>{activeProject.caseStudy.validation.compatibility.detail}</p>
+                                                    </div>
+                                                    <div className="case-study-val-card">
+                                                        <h5>{activeProject.caseStudy.validation.historicalCorrection.title}</h5>
+                                                        <p>{activeProject.caseStudy.validation.historicalCorrection.detail}</p>
+                                                    </div>
+                                                    <div className="case-study-val-card">
+                                                        <h5>{activeProject.caseStudy.validation.realBenchmark.title}</h5>
+                                                        <p>{activeProject.caseStudy.validation.realBenchmark.detail}</p>
+                                                    </div>
+                                                    <div className="case-study-val-card highlight-val">
+                                                        <h5>{activeProject.caseStudy.validation.syntheticBenchmark.title}</h5>
+                                                        <p>{activeProject.caseStudy.validation.syntheticBenchmark.detail}</p>
+                                                    </div>
+                                                </div>
+                                            </CaseStudySection>
 
-                                    <CaseStudySection number="05" title="Technical Implementation">
-                                        <ul>
-                                            {activeProject.caseStudy.technicalImplementation.map(item => <li key={item}>{item}</li>)}
-                                        </ul>
-                                    </CaseStudySection>
+                                            {/* F. Technical Architecture */}
+                                            <CaseStudySection number="06" title="Technical Architecture">
+                                                <div className="case-study-arch-grid">
+                                                    {activeProject.caseStudy.architecture.map((arch, idx) => (
+                                                        <div className="case-study-arch-card" key={idx}>
+                                                            <span className="arch-cat">{arch.category}</span>
+                                                            <p className="arch-stack">{arch.stack}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
 
-                                    <CaseStudySection number="06" title="Why I Built It">
-                                        <p>{activeProject.caseStudy.whyBuilt}</p>
-                                    </CaseStudySection>
+                                            {/* G. Live Release Status */}
+                                            <CaseStudySection number="07" title="Live Release Status">
+                                                <div className="case-study-release-card">
+                                                    <div className="release-badge-row">
+                                                        <span className="release-version">{activeProject.caseStudy.releaseStatus.version}</span>
+                                                        <span className="release-tag">{activeProject.caseStudy.releaseStatus.typeLabel}</span>
+                                                    </div>
+                                                    <div className="release-links">
+                                                        <a href={activeProject.caseStudy.releaseStatus.liveDemoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary btn-compact">
+                                                            Live Demo <Icons.External />
+                                                        </a>
+                                                        <a href={activeProject.caseStudy.releaseStatus.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-compact">
+                                                            GitHub Repository <Icons.External />
+                                                        </a>
+                                                        <a href={activeProject.caseStudy.releaseStatus.apiUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-compact">
+                                                            Backend API <Icons.External />
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </CaseStudySection>
 
-                                    <CaseStudySection number="07" title="Project Disclosure">
-                                        <p className="case-study-disclosure">{activeProject.caseStudy.disclosure}</p>
-                                    </CaseStudySection>
+                                            {/* H. Key Takeaway */}
+                                            <CaseStudySection number="08" title="Key Takeaway">
+                                                <p className="case-study-takeaway">{activeProject.caseStudy.keyTakeaway}</p>
+                                            </CaseStudySection>
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            <div className="case-study-intro">
+                                                <span>{activeProject.demoUrl ? 'Interactive portfolio prototype' : 'Portfolio prototype · Demo coming soon'}</span>
+                                                <p>{activeProject.description}</p>
+                                            </div>
+
+                                            <CaseStudySection number="01" title="Problem">
+                                                <p>{activeProject.caseStudy.problem}</p>
+                                            </CaseStudySection>
+
+                                            <CaseStudySection number="02" title="Solution">
+                                                <p>{activeProject.caseStudy.solution}</p>
+                                            </CaseStudySection>
+
+                                            <CaseStudySection number="03" title="Workflow">
+                                                <ol className="case-study-workflow">
+                                                    {activeProject.caseStudy.workflow.map(item => <li key={item}>{item}</li>)}
+                                                </ol>
+                                            </CaseStudySection>
+
+                                            <CaseStudySection number="04" title="Quality Methods">
+                                                <ul className="case-study-method-list">
+                                                    {activeProject.caseStudy.qualityMethods.map(item => <li key={item}>{item}</li>)}
+                                                </ul>
+                                            </CaseStudySection>
+
+                                            <CaseStudySection number="05" title="Technical Implementation">
+                                                <ul>
+                                                    {activeProject.caseStudy.technicalImplementation.map(item => <li key={item}>{item}</li>)}
+                                                </ul>
+                                            </CaseStudySection>
+
+                                            <CaseStudySection number="06" title="Why I Built It">
+                                                <p>{activeProject.caseStudy.whyBuilt}</p>
+                                            </CaseStudySection>
+
+                                            <CaseStudySection number="07" title="Project Disclosure">
+                                                <p className="case-study-disclosure">{activeProject.caseStudy.disclosure}</p>
+                                            </CaseStudySection>
+                                        </React.Fragment>
+                                    )}
 
                                     <footer className="case-study-footer">
-                                        {activeProject.demoUrl ? (
+                                        {activeProject.demoUrl && (
                                             <a href={activeProject.demoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary project-demo-link">
                                                 Open Live Demo <Icons.External />
                                             </a>
-                                        ) : (
-                                            <span className="project-coming-soon">Live Demo · Coming Soon</span>
+                                        )}
+                                        {activeProject.githubUrl && (
+                                            <a href={activeProject.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary project-github-link">
+                                                GitHub Repository <Icons.External />
+                                            </a>
                                         )}
                                         <button type="button" className="btn-secondary" onClick={closeCaseStudy}>Close</button>
                                     </footer>

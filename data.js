@@ -162,47 +162,161 @@ window.PORTFOLIO_DATA = {
         {
             id: "dataqual",
             title: "DataQual",
-            subtitle: "Annotation Quality Intelligence Platform",
+            subtitle: "Evidence-Driven AI Annotation Quality & Review Prioritization",
             category: "General Annotation Quality",
-            description: "An interactive portfolio prototype for monitoring annotation quality, investigating disagreement, and prioritizing review across supervised labeling workflows.",
-            capabilities: [
-                "Annotator quality ranking and performance visibility",
-                "Agreement, consensus, and adjudication workflows",
-                "Active-learning sampling with configurable strategies",
-                "AI-assist acceptance and anchoring-risk monitoring",
-                "Fairness auditing, weak supervision, and CSV/JSON input"
-            ],
-            methods: ["Krippendorff's Alpha", "Gwet's AC1", "Dawid-Skene", "MACE", "BADGE / BALD", "Snorkel-style rules"],
-            technologies: ["React 18", "Browser JavaScript", "Babel", "Local storage", "CSV / JSON"],
-            demoUrl: "https://subtle-kashata-db5525.netlify.app",
+            description: "A research-grade AI annotation quality system that turns raw human-label events into agreement analysis, consensus inference, uncertainty-aware annotator diagnostics, explainable disagreement flags, and benchmarked review prioritization.",
+            image: "assets/dataqual/dataqual-overview.png",
+            demoUrl: "https://kveigas.github.io/dataqual/",
+            githubUrl: "https://github.com/kveigas/dataqual",
             demoLabel: "Live Demo",
             featured: true,
             caseStudy: {
-                title: "DataQual - Annotation Quality Intelligence",
-                problem: "Annotation operations need one place to see reviewer performance, surface disagreement, inspect possible bias, and decide which items deserve attention. These signals are often split across spreadsheets, scripts, and disconnected dashboards.",
-                solution: "DataQual brings those operational views into a single browser-based prototype. It models how a quality lead could move from dataset intake to agreement review, adjudication, targeted sampling, and ongoing monitoring.",
-                workflow: [
-                    "Load or enter annotator data using JSON, CSV, or the in-app form.",
-                    "Review quality ranking, throughput, agreement, and consensus views.",
-                    "Route disagreements into an adjudication queue for resolution.",
-                    "Prioritize uncertain examples through the smart-sampling workspace.",
-                    "Monitor AI-assist acceptance patterns and subgroup quality signals."
+                title: "DataQual — Evidence-Driven AI Annotation Quality & Review Prioritization",
+                subtitle: "Research-grade AI data operations prototype for agreement, consensus, annotator diagnostics, and review prioritization.",
+                problem: "Annotation operations need a principled way to evaluate dataset reliability, identify the root causes of disagreement, and allocate scarce human review effort efficiently. Too often, quality management relies on ad-hoc spreadsheets or single-number metrics that mask worker uncertainty, obscure consensus assumptions, and blend data defects with legitimate guideline ambiguity.",
+                solution: "DataQual was built to answer a practical AI data-operations question: how do you know whether an annotation dataset is trustworthy enough to use, where disagreement is coming from, and where scarce human review effort should be spent?\n\nThe system preserves raw evidence and provenance, measures agreement, compares consensus assumptions, estimates annotator reliability with uncertainty, distinguishes likely annotation defects from legitimate ambiguity, and ranks review candidates using evidence-backed prioritization methods.\n\nDataQual is intentionally designed to expose uncertainty and negative results rather than compressing everything into a single opaque quality score.",
+                capabilities: [
+                    {
+                        domain: "Agreement & Coverage",
+                        items: [
+                            "Raw percent agreement across pairable items",
+                            "Pairwise agreement on genuinely shared items",
+                            "Nominal Krippendorff's Alpha",
+                            "Bootstrap confidence intervals",
+                            "Overlap and co-annotation evidence"
+                        ]
+                    },
+                    {
+                        domain: "Consensus Inference",
+                        items: [
+                            "Majority Vote (deterministic baseline)",
+                            "Weighted Vote",
+                            "Dawid–Skene (expectation-maximization latent label estimation)",
+                            "12-iteration convergence diagnostics",
+                            "Consensus method comparisons",
+                            "Item-level disagreement surfacing between consensus methods"
+                        ]
+                    },
+                    {
+                        domain: "Annotator Intelligence",
+                        items: [
+                            "Gold-observed performance (correctness / gold N)",
+                            "Leave-One-Worker-Out project prior Beta-Binomial shrinkage",
+                            "Posterior reliability mean",
+                            "95% credible intervals",
+                            "Class-specific confusion evidence (Dirichlet-smoothed)",
+                            "Evidence-oriented interpretation rather than simplistic worker ranking"
+                        ]
+                    },
+                    {
+                        domain: "Disagreement Diagnostics",
+                        items: [
+                            "Probable quality defect flags (dissenting annotation / data corruption)",
+                            "Probable ambiguity / policy issue flags (high entropy / policy gap)",
+                            "Mixed evidence flags (contradictory signals)",
+                            "Insufficient evidence flags (annotation count < 2)",
+                            "Explainable rules with support, thresholds, uncertainty, and recommended action"
+                        ]
+                    },
+                    {
+                        domain: "Review Prioritization",
+                        items: [
+                            "Random sampling baseline",
+                            "Highest entropy baseline",
+                            "Lowest consensus confidence baseline",
+                            "Lowest worker reliability baseline",
+                            "Experimental Expected Review Value (ERV)",
+                            "Decomposable score components (uncertainty u_i, ambiguity h_i, reliability e_i)"
+                        ]
+                    },
+                    {
+                        domain: "Benchmarking",
+                        items: [
+                            "Deterministic synthetic simulator",
+                            "Multiple worker and item archetypes (S1–S12 scenarios)",
+                            "Multi-seed evaluation (5–10 seeds)",
+                            "Fixed review budgets with Precision@K and Error Recall",
+                            "Normalized AUREC@20%",
+                            "Paired method comparisons and negative-result preservation"
+                        ]
+                    }
                 ],
-                qualityMethods: [
-                    "Agreement views labeled for Krippendorff's Alpha and Gwet's AC1",
-                    "Dawid-Skene and MACE-style annotator competence views",
-                    "BADGE, BALD, BatchBALD, and coreset sampling options",
-                    "Anchoring-risk alerts based on AI-suggestion acceptance behavior",
-                    "Snorkel-style labeling-function coverage and conflict checks"
+                screenshots: [
+                    {
+                        id: "overview",
+                        src: "assets/dataqual/dataqual-overview.png",
+                        alt: "DataQual Overview & Agreement View",
+                        label: "Overview & Agreement",
+                        caption: "Evidence intake, dataset coverage, agreement, and provenance from a deterministic synthetic demo dataset."
+                    },
+                    {
+                        id: "consensus",
+                        src: "assets/dataqual/dataqual-consensus.png",
+                        alt: "DataQual Consensus Sensitivity View",
+                        label: "Consensus Sensitivity",
+                        caption: "Majority Vote and Dawid–Skene can produce different labels under different assumptions; DataQual surfaces those disagreements rather than hiding them."
+                    },
+                    {
+                        id: "annotators",
+                        src: "assets/dataqual/dataqual-annotators.png",
+                        alt: "DataQual Annotator Intelligence View",
+                        label: "Annotator Intelligence",
+                        caption: "Bayesian reliability estimates are shown with evidence support and credible intervals rather than a single opaque worker score."
+                    },
+                    {
+                        id: "diagnostics",
+                        src: "assets/dataqual/dataqual-diagnostics.png",
+                        alt: "DataQual Disagreement Diagnostics View",
+                        label: "Disagreement Diagnostics",
+                        caption: "Disagreement is separated into likely quality defects, ambiguity / policy issues, mixed evidence, and insufficient evidence."
+                    },
+                    {
+                        id: "review-queue",
+                        src: "assets/dataqual/dataqual-review-queue.png",
+                        alt: "DataQual Review Queue View",
+                        label: "Review Queue Prioritization",
+                        caption: "Review candidates are ranked using transparent, decomposable evidence rather than hidden scoring."
+                    },
+                    {
+                        id: "benchmarks",
+                        src: "assets/dataqual/dataqual-benchmarks.png",
+                        alt: "DataQual Benchmarks Research View",
+                        label: "Synthetic Benchmark Research",
+                        caption: "Multi-seed synthetic benchmarking compares ERV against simple baselines and preserves negative results when a baseline performs better."
+                    }
                 ],
-                technicalImplementation: [
-                    "Single-page React 18 interface loaded through CDN scripts",
-                    "Client-side state with browser local storage",
-                    "Browser-based CSV and JSON parsing with no backend dependency",
-                    "Responsive modules for ranking, consensus, sampling, fairness, and data programming"
+                validation: {
+                    compatibility: {
+                        title: "Dawid–Skene Reference Compatibility",
+                        detail: "Achieved 100% hard-label parity against the pinned Crowd-Kit reference implementation on the selected real Requirements Annotation benchmark, with an absolute gold-accuracy difference of 0.00000 and posterior MAE approximately 7.72e-11."
+                    },
+                    historicalCorrection: {
+                        title: "Historical Correction Preserved",
+                        detail: "The original smoothed-v1 Dawid–Skene implementation achieved 68.75% hard-label parity against Crowd-Kit. Rather than concealing this discrepancy, the root cause was isolated and documented: the smoothed variant remains explicitly separated from the reference-compatible implementation."
+                    },
+                    realBenchmark: {
+                        title: "Real Benchmark Result",
+                        detail: "On the selected real Requirements Annotation benchmark, Majority Vote outperformed Dawid–Skene, demonstrating that complex probabilistic models do not universally surpass simple voting when worker accuracy is uniform."
+                    },
+                    syntheticBenchmark: {
+                        title: "Synthetic Benchmark Result",
+                        detail: "The benchmark evaluation framework deliberately permits ERV to lose against simpler heuristics. In the displayed synthetic benchmark (Scenario S1), Highest Entropy achieved a normalized AUREC@20% of 0.5580 versus ERV at 0.5536, preserving the negative result."
+                    }
+                },
+                architecture: [
+                    { category: "Frontend", stack: "React, TypeScript, Vite, GitHub Pages" },
+                    { category: "Backend", stack: "FastAPI, Python 3.12, Render" },
+                    { category: "Data / Analytics", stack: "DuckDB, Parquet, Apache Arrow, NumPy / SciPy (Crowd-Kit as external parity reference)" },
+                    { category: "Quality / Engineering", stack: "Pytest, Pyright, Ruff, Vitest, Playwright, Axe accessibility checks, GitHub Actions CI" }
                 ],
-                whyBuilt: "I built DataQual to demonstrate how annotation-quality methods can be translated into practical operational interfaces: clear monitoring, review queues, decision support, and traceable QA workflows.",
-                disclosure: "This is a portfolio prototype. Dashboard records, projected returns, and quality scores are demonstration data. Some displayed statistics are simplified client-side models rather than independently validated production estimators."
+                releaseStatus: {
+                    version: "v4.0.0-rc1",
+                    typeLabel: "Research-grade portfolio prototype",
+                    liveDemoUrl: "https://kveigas.github.io/dataqual/",
+                    githubUrl: "https://github.com/kveigas/dataqual",
+                    apiUrl: "https://dataqual-api.onrender.com"
+                },
+                keyTakeaway: "DataQual demonstrates an evidence-first approach to human-data operations: preserve provenance, quantify uncertainty, separate disagreement causes, compare assumptions, and prioritize review effort without hiding methodological failures or negative benchmark results."
             }
         },
         {
