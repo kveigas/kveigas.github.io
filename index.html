@@ -521,7 +521,7 @@
                             <h2 className="section-title">Flagship Projects</h2>
                         </div>
                         <p className="projects-intro">
-                            Research-grade AI quality-operations platform for dataset evaluation, consensus inference, and review prioritization.
+                            Production-focused AI human-data operations prototypes for dataset quality evaluation, worker calibration, deterministic task allocation, and campaign delivery control.
                         </p>
                     </div>
 
@@ -729,6 +729,109 @@
                                             </CaseStudySection>
 
                                             {/* H. Key Takeaway */}
+                                            <CaseStudySection number="08" title="Key Takeaway">
+                                                <p className="case-study-takeaway">{activeProject.caseStudy.keyTakeaway}</p>
+                                            </CaseStudySection>
+                                        </React.Fragment>
+                                    ) : activeProject.id === "opspilot" ? (
+                                        <React.Fragment>
+                                            {/* 01 Problem / Operational Context */}
+                                            <CaseStudySection number="01" title="Problem / Operational Context">
+                                                <div className="case-study-narrative">
+                                                    {activeProject.caseStudy.problem.split('\n\n').map((paragraph, idx) => (
+                                                        <p key={idx} style={{ marginBottom: idx < activeProject.caseStudy.problem.split('\n\n').length - 1 ? '12px' : 0 }}>{paragraph}</p>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
+
+                                            {/* 02 What OpsPilot Does */}
+                                            <CaseStudySection number="02" title="What OpsPilot Does">
+                                                <div className="case-study-narrative">
+                                                    {activeProject.caseStudy.solution.split('\n\n').map((paragraph, idx) => (
+                                                        <p key={idx} style={{ marginBottom: idx < activeProject.caseStudy.solution.split('\n\n').length - 1 ? '12px' : 0 }}>{paragraph}</p>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
+
+                                            {/* 03 Core Workflow */}
+                                            <CaseStudySection number="03" title="Core Workflow">
+                                                <ol className="case-study-workflow">
+                                                    {activeProject.caseStudy.workflow.map((item, idx) => (
+                                                        <li key={idx}>{item}</li>
+                                                    ))}
+                                                </ol>
+                                            </CaseStudySection>
+
+                                            {/* 04 Selected Product Screenshots */}
+                                            <CaseStudySection number="04" title="Selected Product Screenshots">
+                                                <div className="case-study-gallery">
+                                                    {activeProject.caseStudy.screenshots.map((shot) => (
+                                                        <figure key={shot.id} className="case-study-figure">
+                                                            <div className="case-study-img-wrap">
+                                                                <img src={shot.src} alt={shot.alt} loading="lazy" />
+                                                            </div>
+                                                            <figcaption className="case-study-caption">
+                                                                <strong>{shot.label}</strong> — {shot.caption}
+                                                            </figcaption>
+                                                        </figure>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
+
+                                            {/* 05 Operational Logic */}
+                                            <CaseStudySection number="05" title="Operational Logic">
+                                                <div className="case-study-validation-grid">
+                                                    {activeProject.caseStudy.logic.map((item, idx) => (
+                                                        <div className="case-study-val-card" key={idx}>
+                                                            <h5>{item.mechanism}</h5>
+                                                            <p>{item.detail}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
+
+                                            {/* 06 Technical Architecture */}
+                                            <CaseStudySection number="06" title="Technical Architecture">
+                                                <div className="case-study-arch-grid">
+                                                    {activeProject.caseStudy.architecture.map((arch, idx) => (
+                                                        <div className="case-study-arch-card" key={idx}>
+                                                            <span className="arch-cat">{arch.category}</span>
+                                                            <p className="arch-stack">{arch.stack}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </CaseStudySection>
+
+                                            {/* 07 Validation & Release */}
+                                            <CaseStudySection number="07" title="Validation & Release">
+                                                <div className="case-study-validation-grid">
+                                                    {activeProject.caseStudy.validation.map((item, idx) => (
+                                                        <div className="case-study-val-card" key={idx}>
+                                                            <h5>{item.title}</h5>
+                                                            <p>{item.detail}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="case-study-release-card" style={{ marginTop: '16px' }}>
+                                                    <div className="release-badge-row">
+                                                        <span className="release-version">{activeProject.caseStudy.releaseStatus.version}</span>
+                                                        <span className="release-tag">{activeProject.caseStudy.releaseStatus.typeLabel}</span>
+                                                    </div>
+                                                    <div className="release-links">
+                                                        <a href={activeProject.caseStudy.releaseStatus.liveDemoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary btn-compact">
+                                                            Live Demo <Icons.External />
+                                                        </a>
+                                                        <a href={activeProject.caseStudy.releaseStatus.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-compact">
+                                                            GitHub Repository <Icons.External />
+                                                        </a>
+                                                        <a href={activeProject.caseStudy.releaseStatus.apiUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-compact">
+                                                            Backend API <Icons.External />
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </CaseStudySection>
+
+                                            {/* 08 Key Takeaway */}
                                             <CaseStudySection number="08" title="Key Takeaway">
                                                 <p className="case-study-takeaway">{activeProject.caseStudy.keyTakeaway}</p>
                                             </CaseStudySection>

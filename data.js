@@ -318,6 +318,114 @@ window.PORTFOLIO_DATA = {
                 },
                 keyTakeaway: "DataQual demonstrates an evidence-first approach to human-data operations: preserve provenance, quantify uncertainty, separate disagreement causes, compare assumptions, and prioritize review effort without hiding methodological failures or negative benchmark results."
             }
+        },
+        {
+            id: "opspilot",
+            title: "OpsPilot",
+            subtitle: "Human Data Campaign Operations & Delivery Control",
+            category: "Campaign Operations & Delivery",
+            description: "A usable operations system for running AI human-data campaigns from workforce calibration and deterministic task allocation through production execution, QA/rework, SLA risk monitoring, and delivery readiness.",
+            image: "assets/opspilot/opspilot-today.png",
+            demoUrl: "https://kveigas.github.io/opspilot/",
+            githubUrl: "https://github.com/kveigas/opspilot",
+            demoLabel: "Live Demo",
+            featured: true,
+            capabilities: [
+                "Workforce Calibration & Conditional Qualification",
+                "Deterministic Capacity & Round-Robin Task Allocation",
+                "Controlled Task State Machine & Enforced Transitions",
+                "QA Review Sampling, Rework Control & Escalations",
+                "SLA Risk Monitoring & 5-Gate Delivery Readiness"
+            ],
+            methods: [
+                "Rules-Based Allocation",
+                "Capacity Management",
+                "Task State Machine",
+                "QA Rework Loop",
+                "SLA Risk Engine",
+                "5-Gate Delivery Checklist"
+            ],
+            caseStudy: {
+                title: "OpsPilot — Human Data Campaign Operations & Delivery Control",
+                subtitle: "Full-stack operational control system for workforce calibration, deterministic allocation, task state execution, QA rework, SLA monitoring, and delivery readiness.",
+                problem: "Human-data programs can fail operationally even when annotation guidelines and model objectives are clear. Managers still need to coordinate worker qualification, capacity, task allocation, production state, review backlogs, escalations, SLA pressure, and final delivery readiness.\n\nOpsPilot was built to make those decisions explicit and operationally traceable.",
+                solution: "OpsPilot supports the complete end-to-end manager workflow:\n\nCampaign Intake → Workforce Setup → Calibration → Rules-Based Allocation → Execution Operations → QA & Rework Control → Escalation Handling → SLA Risk Monitoring → Delivery Readiness.\n\nOperational metrics and health indicators are directly tied to real persisted task and workflow states rather than static dashboards.",
+                workflow: [
+                    "Campaign Intake (total volume, target throughput, quality target, review sampling %)",
+                    "Workforce Setup & Calibration (skill domains, qualification exams, conditional passing)",
+                    "Deterministic Allocation (rules-based capacity matching and round-robin task assignment)",
+                    "Execution Operations (10-state task lifecycle with enforced valid state transitions)",
+                    "QA & Escalation Handling (review sampling, immutable verdicts, rework limits, guideline escalations)",
+                    "SLA Risk Monitoring (ON_TRACK, AT_RISK, CRITICAL with explicit transparent reason codes)",
+                    "Delivery Readiness (5-gate mandatory checklist: volume, review count, quality target, escalations, blocked tasks)"
+                ],
+                screenshots: [
+                    {
+                        id: "today",
+                        src: "assets/opspilot/opspilot-today.png",
+                        alt: "OpsPilot Today Dashboard View",
+                        label: "Today Dashboard",
+                        caption: "Critical operational baseline and manager action cockpit."
+                    },
+                    {
+                        id: "allocations",
+                        src: "assets/opspilot/opspilot-allocations.png",
+                        alt: "OpsPilot Allocations View",
+                        label: "Allocations Engine",
+                        caption: "Deterministic workload distribution across qualified workers and date-scoped capacity."
+                    },
+                    {
+                        id: "execution",
+                        src: "assets/opspilot/opspilot-execution.png",
+                        alt: "OpsPilot Execution View",
+                        label: "Execution Operations",
+                        caption: "Live campaign throughput, backlog, and task-state monitoring."
+                    },
+                    {
+                        id: "qa-escalations",
+                        src: "assets/opspilot/opspilot-qa-escalations.png",
+                        alt: "OpsPilot QA & Escalations View",
+                        label: "QA & Escalations",
+                        caption: "Review decisions, rework control, reason codes, and escalation handling."
+                    },
+                    {
+                        id: "delivery",
+                        src: "assets/opspilot/opspilot-delivery.png",
+                        alt: "OpsPilot Delivery View",
+                        label: "Delivery Readiness",
+                        caption: "Final delivery validation with all mandatory readiness gates satisfied."
+                    }
+                ],
+                logic: [
+                    { mechanism: "Qualification", detail: "Workers must satisfy campaign calibration rules where required." },
+                    { mechanism: "Capacity", detail: "Allocation uses date-scoped available capacity and prevents over-allocation across campaigns." },
+                    { mechanism: "Allocation", detail: "Deterministic, rules-based worker selection with skill, role, qualification, availability, and capacity constraints." },
+                    { mechanism: "Execution", detail: "Tasks move through an enforced state machine with invalid transitions rejected." },
+                    { mechanism: "QA Control", detail: "Deterministic review sampling, immutable review decisions, rework limits, and escalation paths." },
+                    { mechanism: "SLA Engine", detail: "Transparent statuses: ON_TRACK, AT_RISK, CRITICAL with explicit reason codes." },
+                    { mechanism: "Delivery Readiness", detail: "Five mandatory gates determine READY, READY_WITH_WARNINGS, or NOT_READY without an opaque score." }
+                ],
+                architecture: [
+                    { category: "Frontend", stack: "React, TypeScript, Vite, GitHub Pages" },
+                    { category: "Backend", stack: "FastAPI, Python 3.12, Render" },
+                    { category: "Persistence", stack: "SQLAlchemy, SQLite" },
+                    { category: "Quality / CI", stack: "Pytest, Ruff, Pyright, Vitest, Playwright, Axe accessibility checks, GitHub Actions" }
+                ],
+                validation: [
+                    { title: "Backend Test Suite", detail: "38/38 backend tests passed (91.74% backend coverage)." },
+                    { title: "Frontend & E2E Validation", detail: "10/10 Vitest tests passed; 19/19 Playwright E2E and accessibility tests passed with 0 serious/critical Axe violations." },
+                    { title: "Deterministic Public Scenario", detail: "Demonstrates full demo recovery on a 2,000-task, 16-worker synthetic dataset from CRITICAL / NOT_READY to ON_TRACK / READY." },
+                    { title: "Public Deployment", detail: "Live public SPA on GitHub Pages connected via CORS to FastAPI backend on Render (Release Candidate v1.0.0-rc1)." }
+                ],
+                releaseStatus: {
+                    version: "v1.0.0-rc1",
+                    typeLabel: "Deterministic synthetic public demo candidate",
+                    liveDemoUrl: "https://kveigas.github.io/opspilot/",
+                    githubUrl: "https://github.com/kveigas/opspilot",
+                    apiUrl: "https://opspilot-api.onrender.com"
+                },
+                keyTakeaway: "OpsPilot demonstrates how I think about AI data operations as an operational system: qualification, capacity, task routing, execution, quality control, escalation handling, SLA risk, and delivery must work together rather than as isolated dashboards."
+            }
         }
     ]
 };
