@@ -1,5 +1,5 @@
 import { initHeroSim } from './hero-sim.js';
-import { mountQaFrontier, mountRanking, mountSavings, mountWorkerModel } from './charts.js';
+import { mountQaFrontier, mountSavings, mountWorkerModel } from './charts.js';
 
 const root = document.documentElement;
 
@@ -128,7 +128,6 @@ const mounts = [
   ['[data-hero-sim]', initHeroSim],
   ['[data-panel="savings"]', mountSavings],
   ['[data-panel="worker-model"]', mountWorkerModel],
-  ['[data-panel="ranking"]', mountRanking],
   ['[data-panel="qa"]', mountQaFrontier],
 ];
 const lazy = new IntersectionObserver(

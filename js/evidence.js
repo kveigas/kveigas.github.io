@@ -51,29 +51,6 @@ export const ADAPTIVE_HIGH = [
   ['S12', 0.95, 4.42, 7.99, 98.6, 99.1, 94.0],
 ];
 
-// DataQual docs/evidence/review-ranking-v2/S*.json — mean normalized AUREC@20% over 5 paired seeds.
-export const RANKING_METHODS = {
-  random: 'Random',
-  highest_entropy: 'Vote entropy',
-  lowest_consensus_confidence: 'Lowest consensus confidence',
-  lowest_worker_reliability: 'Lowest worker reliability',
-  erv: 'ERV',
-};
-export const RANKING = {
-  S1: { random: 0.1055, highest_entropy: 0.5363, lowest_consensus_confidence: 0.2272, lowest_worker_reliability: 0.0791, erv: 0.5346 },
-  S2: { random: 0.1129, highest_entropy: 0.1977, lowest_consensus_confidence: 0.1542, lowest_worker_reliability: 0.1922, erv: 0.1858 },
-  S3: { random: 0.1205, highest_entropy: 0.2706, lowest_consensus_confidence: 0.204, lowest_worker_reliability: 0.3242, erv: 0.2674 },
-  S4: { random: 0.1061, highest_entropy: 0.1533, lowest_consensus_confidence: 0.0868, lowest_worker_reliability: 0.296, erv: 0.1787 },
-  S5: { random: 0.1074, highest_entropy: 0.3548, lowest_consensus_confidence: 0.2145, lowest_worker_reliability: 0.1139, erv: 0.3418 },
-  S6: { random: 0.1117, highest_entropy: 0.2944, lowest_consensus_confidence: 0.1867, lowest_worker_reliability: 0.1409, erv: 0.2832 },
-  S7: { random: 0.0766, highest_entropy: 0.2027, lowest_consensus_confidence: 0.1674, lowest_worker_reliability: 0.1636, erv: 0.1904 },
-  S8: { random: 0.1205, highest_entropy: 0.3407, lowest_consensus_confidence: 0.2112, lowest_worker_reliability: 0.1391, erv: 0.3323 },
-  S9: { random: 0.1119, highest_entropy: 0.1625, lowest_consensus_confidence: 0.1453, lowest_worker_reliability: 0.1545, erv: 0.1522 },
-  S10: { random: 0.1046, highest_entropy: 0.2173, lowest_consensus_confidence: 0.1701, lowest_worker_reliability: 0.2096, erv: 0.2163 },
-  S11: { random: 0.1125, highest_entropy: 0.3202, lowest_consensus_confidence: 0.2009, lowest_worker_reliability: 0.1306, erv: 0.3098 },
-  S12: { random: 0.1065, highest_entropy: 0.2066, lowest_consensus_confidence: 0.1325, lowest_worker_reliability: 0.2968, erv: 0.2011 },
-};
-
 // OpsPilot docs/evidence/adaptive_qa_benchmark.json — 40 paired synthetic worlds.
 // Per world: [adaptive review share, adaptive undetected-error rate, error rate with no QA, flat budget-matched error rate]
 export const QA_WORLDS = [

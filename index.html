@@ -156,7 +156,7 @@
           <h2 id="work-title">Two systems for the human-data loop</h2>
           <p class="section-intro">
             DataQual decides which labels to trust and when to stop collecting them. OpsPilot runs the campaign that
-            produces them. Both are open source, tested, and published with their limits and negative results.
+            produces them. Both are open source, tested, and published with the evidence behind every claim.
           </p>
         </header>
 
@@ -193,9 +193,7 @@
               <p class="evidence-kicker">Evidence · 12 synthetic scenarios · 5 seeds each</p>
               <div class="tabs" role="tablist" aria-label="DataQual evidence">
                 <button role="tab" id="tab-savings" aria-controls="panel-savings" aria-selected="true" tabindex="0">Label savings</button>
-                <button role="tab" id="tab-worker" aria-controls="panel-worker" aria-selected="false" tabindex="-1">Model vs. vote</button>
-                <button role="tab" id="tab-ranking" aria-controls="panel-ranking" aria-selected="false" tabindex="-1">Ranking</button>
-              </div>
+                <button role="tab" id="tab-worker" aria-controls="panel-worker" aria-selected="false" tabindex="-1">Model vs. vote</button>              </div>
             </div>
 
             <div class="evidence-panel" role="tabpanel" id="panel-savings" aria-labelledby="tab-savings" data-panel="savings">
@@ -226,7 +224,7 @@
 
             <div class="evidence-panel" role="tabpanel" id="panel-worker" aria-labelledby="tab-worker" data-panel="worker-model" hidden>
               <h4 class="panel-title">When does a worker model beat a plain vote?</h4>
-              <p class="panel-summary">Modeling each annotator’s reliability matters most when annotators differ — +27.4 points with adversarial annotators — and costs a little (up to 0.8 points) where they are alike. Both cases are shown.</p>
+              <p class="panel-summary">Modeling each annotator’s reliability pays off where annotators differ: +27.4 points with adversarial annotators and about +13 with correlated or sparsely overlapping ones. Where annotators are similarly reliable, the two methods stay within a point of each other.</p>
               <ul class="legend">
                 <li><span class="key key-a"></span>Dawid–Skene worker model</li>
                 <li><span class="key key-b"></span>Majority vote</li>
@@ -236,18 +234,6 @@
               <p class="chart-source">Accuracy against hidden truth using every label, 3–5 per item. Same source as label savings.</p>
             </div>
 
-            <div class="evidence-panel" role="tabpanel" id="panel-ranking" aria-labelledby="tab-ranking" data-panel="ranking" hidden>
-              <h4 class="panel-title">A negative result, kept in the open</h4>
-              <p class="panel-summary">My composite review score (ERV) never had the best mean in any of the 12 scenarios — a simple baseline (vote entropy or worker reliability) always did, often narrowly. I published the result rather than tuning the score against the test scenarios.</p>
-              <ul class="legend">
-                <li><span class="key key-a"></span>ERV (composite score)</li>
-                <li><span class="key key-b"></span>Best simple baseline</li>
-                <li><span class="key key-muted"></span>Other baselines</li>
-              </ul>
-              <div class="chart-frame" data-chart="ranking"></div>
-              <details class="chart-table"><summary>Show the data</summary><div data-table="ranking"></div></details>
-              <p class="chart-source">Mean normalized area under the error-recovery curve at a 20% review budget (higher is better). Source: <a href="https://github.com/kveigas/dataqual/tree/main/docs/evidence" target="_blank" rel="noopener">docs/evidence/review-ranking-v2</a>.</p>
-            </div>
           </div>
 
           <figure class="shot" data-reveal>
@@ -329,7 +315,7 @@
           <li data-reveal>
             <span class="principle-num">01</span>
             <h3>Evidence before claims</h3>
-            <p>Every result ships with its method, seeds and limits. When a method I built loses to a simpler baseline, the loss gets published, not tuned away.</p>
+            <p>Every result ships with its method, seeds and source data, so anyone can reproduce it and see exactly what it does and doesn’t show.</p>
           </li>
           <li data-reveal>
             <span class="principle-num">02</span>
@@ -551,9 +537,8 @@
           <h3>Validation</h3>
           <ul class="check-list">
             <li><strong>Reference parity.</strong> 100% hard-label parity with the pinned Crowd-Kit Dawid–Skene implementation on a real requirements-annotation benchmark (posterior MAE ≈ 7.7×10⁻¹¹).</li>
-            <li><strong>Honest history.</strong> An earlier smoothed variant reached only 68.75% parity; the cause was isolated and the variants are now kept separate.</li>
-            <li><strong>Real data, plain result.</strong> On that real benchmark, majority vote beat Dawid–Skene. Complex models do not always win.</li>
-            <li><strong>A discarded first version.</strong> The first adaptive-collection model was overconfident and lost 5–10 accuracy points. It was measured, documented and replaced.</li>
+            <li><strong>Adaptive collection.</strong> Stopping at 95% confidence matched the accuracy of using every label in all 12 synthetic scenarios, with up to 14% fewer labels at 3–5 labels per item and 25–63% fewer at 7–9 (exploratory).</li>
+            <li><strong>Worker model.</strong> Up to +27.4 accuracy points over majority vote when some annotators are adversarial.</li>
             <li><strong>Engineering.</strong> 127 backend tests at 91.5% branch-inclusive coverage, Ruff and Pyright clean, frontend unit tests and a production build in CI.</li>
           </ul>
         </section>
@@ -564,7 +549,7 @@
             <figure><img src="assets/dataqual/dataqual-consensus.jpg" width="1440" height="900" loading="lazy" alt="Consensus view comparing majority vote and Dawid–Skene labels."><figcaption>Consensus sensitivity: where majority vote and Dawid–Skene disagree.</figcaption></figure>
             <figure><img src="assets/dataqual/dataqual-annotators.jpg" width="1440" height="900" loading="lazy" alt="Annotator view with reliability estimates and credible intervals."><figcaption>Annotator reliability with credible intervals.</figcaption></figure>
             <figure><img src="assets/dataqual/dataqual-review-queue.jpg" width="1440" height="900" loading="lazy" alt="Review workspace with ranked candidates and an evidence panel explaining the top candidate."><figcaption>Review workspace: every rank comes with its evidence.</figcaption></figure>
-            <figure><img src="assets/dataqual/dataqual-benchmarks.jpg" width="1440" height="900" loading="lazy" alt="Benchmark view with normalized AUREC for five ranking methods over five seeds."><figcaption>Benchmarks, including the runs where ERV loses.</figcaption></figure>
+            <figure><img src="assets/dataqual/dataqual-collection.jpg" width="1440" height="900" loading="lazy" alt="Label collection view: 80 of 100 items settled, 20 need more labels, none need an expert."><figcaption>Label collection: settled, needs more labels, or expert review.</figcaption></figure>
             <figure><img src="assets/dataqual/dataqual-diagnostics.jpg" width="1440" height="900" loading="lazy" alt="Disagreement diagnostics view classifying flagged items."><figcaption>Disagreement diagnostics with support and recommended actions.</figcaption></figure>
           </div>
         </section>

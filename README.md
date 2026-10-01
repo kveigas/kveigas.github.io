@@ -21,7 +21,6 @@ Chart values come from files committed in the project repositories. Update them 
 | Chart | Source |
 | --- | --- |
 | Label savings, worker model vs. vote | `dataqual/docs/evidence/adaptive-collection*/summary.md` |
-| Review ranking | `dataqual/docs/evidence/review-ranking-v2/S*.json` |
 | Adaptive QA | `opspilot/docs/evidence/adaptive_qa_benchmark.json` |
 
 Product screenshots in `assets/` were captured at 1440×900 from local builds of each project running on synthetic demo data.

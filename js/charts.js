@@ -5,8 +5,6 @@ import {
   ADAPTIVE_STANDARD,
   QA_SUMMARY,
   QA_WORLDS,
-  RANKING,
-  RANKING_METHODS,
   SCENARIOS,
 } from './evidence.js';
 
@@ -290,7 +288,6 @@ export function mountWorkerModel(panel) {
           { value: r.accFull, kind: 'a' },
         ],
         end: signed(r.gap),
-        endClass: r.gap < 0 ? 'is-negative' : '',
         aria: `${r.code} ${r.name}: worker model ${r.accFull.toFixed(1)}%, majority vote ${r.accMv.toFixed(1)}%, difference ${signed(r.gap)} points`,
         tip: `<strong>${r.code} · ${r.name}</strong>
           <span><i class="key key-a"></i>Dawid–Skene ${r.accFull.toFixed(1)}%</span>
@@ -303,52 +300,6 @@ export function mountWorkerModel(panel) {
     { label: 'Dawid–Skene', numeric: true, value: (r) => `${r.accFull.toFixed(1)}%` },
     { label: 'Majority vote', numeric: true, value: (r) => `${r.accMv.toFixed(1)}%` },
     { label: 'Difference (pts)', numeric: true, value: (r) => signed(r.gap) },
-  ], rows);
-}
-
-export function mountRanking(panel) {
-  const frame = panel.querySelector('[data-chart="ranking"]');
-  const tableBox = panel.querySelector('[data-table="ranking"]');
-  const rows = Object.entries(RANKING).map(([code, scores]) => {
-    const baselines = Object.entries(scores).filter(([m]) => m !== 'erv');
-    const [bestKey, bestValue] = baselines.reduce((best, cur) => (cur[1] > best[1] ? cur : best));
-    return { code, name: SCENARIOS[code], scores, erv: scores.erv, bestKey, bestValue, diff: scores.erv - bestValue };
-  });
-  responsive(frame, (width) =>
-    renderDotRows(frame, width, {
-      ariaLabel: 'Review ranking: ERV versus the best simple baseline, mean normalized AUREC at 20 percent budget, by scenario',
-      domain: [0, 0.6],
-      ticks: [0, 0.2, 0.4, 0.6],
-      tickFormat: (t) => t.toFixed(1),
-      endHeading: 'ERV − best',
-      rows: rows.map((r) => ({
-        code: r.code,
-        name: r.name,
-        link: [r.erv, r.bestValue],
-        marks: [
-          ...Object.entries(r.scores)
-            .filter(([m]) => m !== 'erv' && m !== r.bestKey)
-            .map(([, v]) => ({ value: v, kind: 'muted' })),
-          { value: r.bestValue, kind: 'b' },
-          { value: r.erv, kind: 'a' },
-        ],
-        end: signed(r.diff, 3),
-        endClass: 'is-negative',
-        aria: `${r.code} ${r.name}: ERV ${r.erv.toFixed(3)}, best baseline ${RANKING_METHODS[r.bestKey]} ${r.bestValue.toFixed(3)}`,
-        tip: `<strong>${r.code} · ${r.name}</strong>
-          <span><i class="key key-a"></i>ERV ${r.erv.toFixed(3)}</span>
-          <span><i class="key key-b"></i>${RANKING_METHODS[r.bestKey]} ${r.bestValue.toFixed(3)} (best baseline)</span>
-          <span><i class="key key-muted"></i>Random ${r.scores.random.toFixed(3)}</span>`,
-      })),
-    }),
-  );
-  renderTable(tableBox, [
-    { label: 'Scenario', value: (r) => `${r.code} ${r.name}` },
-    ...Object.entries(RANKING_METHODS).map(([key, label]) => ({
-      label,
-      numeric: true,
-      value: (r) => r.scores[key].toFixed(3),
-    })),
   ], rows);
 }
 
