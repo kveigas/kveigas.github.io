@@ -123,6 +123,19 @@ document.querySelectorAll('dialog').forEach((dialog) => {
   dialog.querySelectorAll('[data-close-dialog]').forEach((b) => b.addEventListener('click', () => dialog.close()));
 });
 
+// --- Wake the live demos' APIs in the background. They run on a free tier that sleeps when idle
+// and takes about half a minute to start, so they are ready by the time a visitor opens a demo.
+const DEMO_API_HEALTH = [
+  'https://dataqual-api.onrender.com/api/v1/health',
+  'https://opspilot-c5y3.onrender.com/api/v1/health',
+];
+const wakeDemoApis = () => {
+  if (navigator.connection?.saveData) return;
+  DEMO_API_HEALTH.forEach((url) => fetch(url, { mode: 'no-cors', cache: 'no-store' }).catch(() => undefined));
+};
+if ('requestIdleCallback' in window) requestIdleCallback(wakeDemoApis, { timeout: 3000 });
+else setTimeout(wakeDemoApis, 1500);
+
 // --- Visualizations mount when they approach the viewport.
 // Each mount is isolated: a visual that fails leaves the static page and every other visual working.
 const safeMount = (node) => {
