@@ -124,6 +124,14 @@ document.querySelectorAll('dialog').forEach((dialog) => {
 });
 
 // --- Visualizations mount when they approach the viewport.
+// Each mount is isolated: a visual that fails leaves the static page and every other visual working.
+const safeMount = (node) => {
+  try {
+    node.__mount(node);
+  } catch (error) {
+    console.error('Visualization failed to load:', error);
+  }
+};
 const mounts = [
   ['[data-hero-sim]', initHeroSim],
   ['[data-panel="savings"]', mountSavings],
@@ -135,7 +143,7 @@ const lazy = new IntersectionObserver(
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       lazy.unobserve(entry.target);
-      entry.target.__mount(entry.target);
+      safeMount(entry.target);
     });
   },
   { rootMargin: '400px 0px' },
@@ -144,7 +152,7 @@ mounts.forEach(([selector, mount]) => {
   document.querySelectorAll(selector).forEach((node) => {
     node.__mount = mount;
     // Hidden tab panels have no box to intersect; mount them immediately (they render on first show).
-    if (node.hidden) mount(node);
+    if (node.hidden) safeMount(node);
     else lazy.observe(node);
   });
 });

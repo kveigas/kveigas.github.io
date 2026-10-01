@@ -45,6 +45,12 @@ const ease = (t) => 1 - Math.pow(1 - t, 3);
 export function initHeroSim(root) {
   const canvas = root.querySelector('canvas');
   const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    // No 2D canvas (locked-down or very old browser): keep the caption, drop the empty stage.
+    root.querySelector('.sim-stage').hidden = true;
+    root.querySelector('[data-sim-toggle]').hidden = true;
+    return;
+  }
   const tooltip = root.querySelector('[data-sim-tooltip]');
   const toggle = root.querySelector('[data-sim-toggle]');
   const out = {
