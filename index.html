@@ -1,1008 +1,645 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kevin Veigas | AI Data Operations & Evaluation</title>
-    <meta name="description" content="Kevin Veigas's portfolio in AI data operations, annotation and review workflows, model evaluation, technical QA, and cross-functional project delivery.">
-    <link rel="canonical" href="https://kveigas.github.io/">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kevin Veigas — AI Data Operations &amp; Evaluation</title>
+  <meta name="description" content="Kevin Veigas runs annotation, review and evaluation operations for AI, and builds open-source tools that measure label quality, target review effort and decide when a dataset is ready to ship.">
+  <link rel="canonical" href="https://kveigas.github.io/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#f6f6f2">
+  <meta name="color-scheme" content="light dark">
 
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Kevin Veigas | AI Data Operations & Evaluation">
-    <meta property="og:description" content="Portfolio covering AI data operations, annotation and review workflows, model evaluation, technical QA, and cross-functional project delivery.">
-    <meta property="og:url" content="https://kveigas.github.io/">
-    <meta name="twitter:card" content="summary">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kveigas.github.io/">
+  <meta property="og:title" content="Kevin Veigas — AI Data Operations & Evaluation">
+  <meta property="og:description" content="Human data for AI, measured — not assumed. Annotation operations, evaluation and technical QA, with open-source tools and published evidence.">
+  <meta property="og:image" content="https://kveigas.github.io/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kevin Prashant Veigas",
+    "url": "https://kveigas.github.io/",
+    "jobTitle": "AI Data Operations & Evaluation",
+    "sameAs": ["https://www.linkedin.com/in/kevinveigas", "https://github.com/kveigas"],
+    "knowsAbout": ["AI data operations", "Annotation quality", "Model evaluation", "Technical QA", "Dawid–Skene", "Human-in-the-loop review"]
+  }
+  </script>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=wave-background-restoration">
+  <!-- Applies a remembered theme before first paint so the page never flashes. -->
+  <script>
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
 
-    <!-- React & Related Libs -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- Three.js (Vanilla) -->
-    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-
-    <!-- Data Source -->
-    <script src="data.js"></script>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css?v=2026-10-redesign">
+  <script type="module" src="js/main.js?v=2026-10-redesign"></script>
 </head>
 
 <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-    <div id="canvas-container" aria-hidden="true"></div>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-
-        // --- Professional Icons (Thin Stroke, Minimal) ---
-        const Icons = {
-            ArrowDown: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14" /><path d="m19 12-7 7-7-7" /></svg>,
-            External: () => <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>,
-            Play: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>,
-            Mail: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>,
-            Linkedin: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></svg>,
-            MapPin: () => <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
-        };
-
-        // --- 3D Signature Visual (Dual Waves + Morphing Particle Globe) ---
-        const WaveBackground = () => {
-            useEffect(() => {
-                const container = document.getElementById('canvas-container');
-                if (!container) return;
-                while (container.firstChild) container.removeChild(container.firstChild);
-
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 120);
-                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-                renderer.setClearColor(0x000000, 0);
-                container.appendChild(renderer.domElement);
-
-                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                const isMobile = window.innerWidth < 700;
-                const waveResolution = isMobile ? 34 : 50;
-                const globeParticleCount = isMobile ? 1050 : 1800;
-                const disposables = [];
-
-                const createWave = (color, opacity, phase, rotationDirection, zPosition) => {
-                    const separation = isMobile ? 1.45 : 1.3;
-                    const particleCount = waveResolution * waveResolution;
-                    const positions = new Float32Array(particleCount * 3);
-                    let index = 0;
-
-                    for (let x = 0; x < waveResolution; x++) {
-                        for (let z = 0; z < waveResolution; z++) {
-                            positions[index] = x * separation - (waveResolution * separation) / 2;
-                            positions[index + 1] = 0;
-                            positions[index + 2] = z * separation - (waveResolution * separation) / 2;
-                            index += 3;
-                        }
-                    }
-
-                    const geometry = new THREE.BufferGeometry();
-                    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                    const material = new THREE.PointsMaterial({
-                        color,
-                        size: isMobile ? 0.24 : 0.30,
-                        transparent: true,
-                        opacity,
-                        depthWrite: false,
-                        blending: THREE.AdditiveBlending
-                    });
-                    const mesh = new THREE.Points(geometry, material);
-                    mesh.position.set(0, phase === 0 ? -4.2 : -2.75, zPosition);
-                    mesh.rotation.x = phase === 0 ? -0.12 : -0.2;
-                    mesh.rotation.z = phase === 0 ? 0.035 : -0.045;
-                    scene.add(mesh);
-                    disposables.push(geometry, material);
-                    return { mesh, phase, rotationDirection, positions };
-                };
-
-                const whiteWave = createWave(0x047857, 0.90, 0, 1, -11);
-                const greenWave = createWave(0x059669, 0.95, 9.5, -1, -15);
-                const waves = [whiteWave, greenWave];
-
-                const globeGeometry = new THREE.BufferGeometry();
-                const globePositions = new Float32Array(globeParticleCount * 3);
-                const globeOrigins = new Float32Array(globeParticleCount * 3);
-                const globeDestinations = new Float32Array(globeParticleCount * 3);
-                const globeRadius = isMobile ? 5.1 : 6.25;
-
-                // A deterministic generator preserves a stable composition between visits.
-                let randomState = 17431;
-                const seededRandom = () => {
-                    randomState = (randomState * 16807) % 2147483647;
-                    return (randomState - 1) / 2147483646;
-                };
-
-                for (let i = 0; i < globeParticleCount; i++) {
-                    const phi = Math.acos(-1 + (2 * i) / globeParticleCount);
-                    const theta = Math.sqrt(globeParticleCount * Math.PI) * phi;
-                    const x = globeRadius * Math.cos(theta) * Math.sin(phi);
-                    const y = globeRadius * Math.sin(theta) * Math.sin(phi);
-                    const z = globeRadius * Math.cos(phi);
-                    const index = i * 3;
-
-                    globeOrigins[index] = globePositions[index] = x;
-                    globeOrigins[index + 1] = globePositions[index + 1] = y;
-                    globeOrigins[index + 2] = globePositions[index + 2] = z;
-
-                    const cloudScale = 1.72 + 0.16 * Math.sin(phi * 5 + theta * 0.04);
-                    const spiral = (i / globeParticleCount) * Math.PI * 5;
-                    const spread = isMobile ? 2.8 : 4.2;
-                    globeDestinations[index] = x * cloudScale + Math.cos(spiral) * spread + (seededRandom() - 0.5) * spread;
-                    globeDestinations[index + 1] = y * cloudScale + Math.sin(spiral * 0.7) * spread + (seededRandom() - 0.5) * spread;
-                    globeDestinations[index + 2] = z * cloudScale + Math.sin(spiral) * spread + (seededRandom() - 0.5) * spread;
-                }
-
-                globeGeometry.setAttribute('position', new THREE.BufferAttribute(globePositions, 3));
-                const globeMaterial = new THREE.PointsMaterial({
-                    color: 0x059669,
-                    size: isMobile ? 0.18 : 0.22,
-                    transparent: true,
-                    opacity: 0.98,
-                    depthWrite: false,
-                    blending: THREE.AdditiveBlending
-                });
-                const globeMesh = new THREE.Points(globeGeometry, globeMaterial);
-                scene.add(globeMesh);
-                disposables.push(globeGeometry, globeMaterial);
-
-                camera.position.set(0, 3.5, 26);
-                camera.lookAt(0, 0, 0);
-
-                let scrollY = 0;
-                const handleScroll = () => {
-                    scrollY = window.scrollY;
-                };
-                window.addEventListener('scroll', handleScroll);
-
-                let animationFrameId = null;
-                let previousTimestamp = null;
-                let elapsed = 0;
-                let layoutY = -0.2;
-
-                const applyLayout = () => {
-                    const mobileLayout = window.innerWidth < 700;
-                    const tabletLayout = window.innerWidth < 1100;
-                    globeMesh.position.x = mobileLayout ? 4.6 : (tabletLayout ? 5.8 : 7.2);
-                    layoutY = mobileLayout ? -0.8 : (tabletLayout ? -0.55 : -0.2);
-                    const scale = mobileLayout ? 0.84 : (tabletLayout ? 0.92 : 1);
-                    globeMesh.scale.setScalar(scale);
-                };
-                applyLayout();
-
-                const renderFrame = (time) => {
-                    waves.forEach(wave => {
-                        let index = 0;
-                        for (let x = 0; x < waveResolution; x++) {
-                            for (let z = 0; z < waveResolution; z++) {
-                                wave.positions[index + 1] =
-                                    Math.sin((x + time * 3.2 + wave.phase) * 0.3) * 1.45 +
-                                    Math.sin((z + time * 2.35 + wave.phase) * 0.5) * 1.35;
-                                index += 3;
-                            }
-                        }
-                        wave.mesh.geometry.attributes.position.needsUpdate = true;
-                        wave.mesh.rotation.y = wave.rotationDirection * time * 0.018;
-                    });
-
-                    // Begin fully formed, unravel, then reform over a slow 13-second cycle.
-                    const rawMorph = (Math.sin(time * 0.48 - Math.PI / 2) + 1) / 2;
-                    const morphFactor = rawMorph * rawMorph;
-                    for (let i = 0; i < globeParticleCount; i++) {
-                        const index = i * 3;
-                        globePositions[index] = globeOrigins[index] + (globeDestinations[index] - globeOrigins[index]) * morphFactor;
-                        globePositions[index + 1] = globeOrigins[index + 1] + (globeDestinations[index + 1] - globeOrigins[index + 1]) * morphFactor;
-                        globePositions[index + 2] = globeOrigins[index + 2] + (globeDestinations[index + 2] - globeOrigins[index + 2]) * morphFactor;
-                    }
-                    globeGeometry.attributes.position.needsUpdate = true;
-                    globeMesh.rotation.y = time * 0.11;
-                    globeMesh.rotation.z = Math.sin(time * 0.16) * 0.045;
-                    globeMesh.position.y = layoutY - scrollY * 0.006;
-
-                    const pageFade = Math.max(0.35, 1 - scrollY / 1200);
-                    whiteWave.mesh.material.opacity = 0.92 * pageFade;
-                    greenWave.mesh.material.opacity = 0.95 * pageFade;
-                    globeMaterial.opacity = 0.98 * pageFade;
-                    renderer.render(scene, camera);
-                };
-
-                const animate = (timestamp) => {
-                    if (previousTimestamp === null) previousTimestamp = timestamp;
-                    elapsed += Math.min((timestamp - previousTimestamp) / 1000, 0.05);
-                    previousTimestamp = timestamp;
-                    renderFrame(elapsed);
-                    animationFrameId = requestAnimationFrame(animate);
-                };
-
-                const startAnimation = () => {
-                    if (reduceMotion || animationFrameId !== null || document.hidden) return;
-                    previousTimestamp = null;
-                    animationFrameId = requestAnimationFrame(animate);
-                };
-
-                const stopAnimation = () => {
-                    if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
-                    animationFrameId = null;
-                };
-
-                const handleVisibilityChange = () => {
-                    if (document.hidden) stopAnimation();
-                    else startAnimation();
-                };
-
-                if (reduceMotion) renderFrame(0);
-                else startAnimation();
-                document.addEventListener('visibilitychange', handleVisibilityChange);
-
-                const handleResize = () => {
-                    camera.aspect = window.innerWidth / window.innerHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-                    applyLayout();
-                    if (reduceMotion) renderFrame(0);
-                }
-                window.addEventListener('resize', handleResize);
-
-                return () => {
-                    stopAnimation();
-                    window.removeEventListener('resize', handleResize);
-                    window.removeEventListener('scroll', handleScroll);
-                    document.removeEventListener('visibilitychange', handleVisibilityChange);
-                    disposables.forEach(item => item.dispose());
-                    renderer.dispose();
-                    if (renderer.domElement.parentNode === container) container.removeChild(renderer.domElement);
-                };
-            }, []);
-            return null;
-        };
-
-        const Navbar = () => {
-            const [menuOpen, setMenuOpen] = useState(false);
-            const navItems = [
-                { label: 'Experience', href: '#experience' },
-                { label: 'Projects', href: '#projects' },
-                { label: 'Capabilities', href: '#capabilities' },
-                { label: 'Education', href: '#education' },
-                { label: 'Contact', href: '#contact' }
-            ];
-
-            useEffect(() => {
-                const closeOnEscape = (event) => {
-                    if (event.key === 'Escape') setMenuOpen(false);
-                };
-                window.addEventListener('keydown', closeOnEscape);
-                return () => window.removeEventListener('keydown', closeOnEscape);
-            }, []);
-
-            return (
-                <nav className="site-nav" aria-label="Primary navigation">
-                    <a href="#top" className="site-logo" aria-label="Kevin Veigas home">
-                        KV<span style={{ color: 'var(--accent-highlight)' }}>.</span>
-                    </a>
-                    <button
-                        type="button"
-                        className="site-menu-toggle"
-                        aria-expanded={menuOpen}
-                        aria-controls="primary-navigation-links"
-                        aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-                        onClick={() => setMenuOpen(open => !open)}
-                    >
-                        <span></span><span></span>
-                    </button>
-                    <ul id="primary-navigation-links" className={`site-nav-links${menuOpen ? ' is-open' : ''}`}>
-                        {navItems.map(item => (
-                            <li key={item.href}>
-                                <a href={item.href} className="nav-link" onClick={() => setMenuOpen(false)}>{item.label}</a>
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
-            );
-        };
-
-        const Hero = () => {
-            const { personal } = window.PORTFOLIO_DATA;
-            return (
-                <section id="top" className="hero-section container">
-                    <div className="hero-glow"></div>
-                    <div className="hero-content">
-                        <p className="hero-name">{personal.name}</p>
-                        <h1 className="hero-title">AI Data Operations <span>&amp; Evaluation</span></h1>
-                        <p className="hero-secondary">AI Project Operations / Technical QA</p>
-                        <p className="hero-summary">
-                            I build and run high-quality AI data workflows — from annotation and review operations to dataset validation, model evaluation, quality monitoring, and cross-functional delivery.
-                        </p>
-                        <p className="hero-status">
-                            <span className="status-dot" aria-hidden="true"></span>
-                            Open to Remote &amp; Global Opportunities
-                        </p>
-
-                        <div className="hero-actions" aria-label="Homepage actions">
-                            <a href="#projects" className="btn-primary">View Projects</a>
-                            <a href="#experience" className="btn-secondary">View Experience</a>
-                        </div>
-
-                        <div className="hero-resource-links">
-                            <a href={`mailto:${personal.email}?subject=Resume Request`} className="btn-tertiary btn-compact hero-text-link">
-                                Request Resume
-                            </a>
-                            <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="btn-tertiary btn-compact hero-text-link">
-                                <Icons.Linkedin /> LinkedIn
-                            </a>
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const ImpactStrip = () => {
-            const metrics = [
-                { value: '15,000+', label: 'Images validated' },
-                { value: '15', label: 'Annotation team members led' },
-                { value: '99%+', label: 'Dataset quality' },
-                { value: '19', label: 'Deployed AI systems monitored' },
-                { value: '30%', label: 'Reduction in QA cycle time' },
-                { value: '35%', label: 'Faster issue response' }
-            ];
-
-            return (
-                <section className="impact-section container" aria-labelledby="impact-heading">
-                    <p id="impact-heading" className="section-eyebrow">Selected operational impact</p>
-                    <div className="impact-grid">
-                        {metrics.map(metric => (
-                            <div className="impact-item" key={metric.label}>
-                                <strong className="impact-value">{metric.value}</strong>
-                                <span className="impact-label">{metric.label}</span>
-                            </div>
-                        ))}
-                    </div>
-                    <p className="impact-source">Professional experience metrics, primarily from Maneva.</p>
-                </section>
-            );
-        };
-
-        const CoreCapabilities = () => {
-            const { skills, supportingTools } = window.PORTFOLIO_DATA;
-            return (
-                <section id="capabilities" className="container" aria-labelledby="capabilities-heading">
-                    <div className="section-heading-compact">
-                        <h2 id="capabilities-heading" className="section-title">Core Capabilities</h2>
-                        <p>Practical strengths across data delivery, model assessment, technical review, and project coordination.</p>
-                    </div>
-                    <div className="capabilities-grid">
-                        {Object.entries(skills).map(([category, items]) => (
-                            <article key={category} className="glass-panel capability-group">
-                                <h3>{category}</h3>
-                                <ul className="capability-list">
-                                    {items.map(skill => (
-                                        <li key={skill}>{skill}</li>
-                                    ))}
-                                </ul>
-                            </article>
-                        ))}
-                    </div>
-                    <div className="supporting-tools" aria-label="Supporting technical tools">
-                        <span className="supporting-tools-label">Supporting tools</span>
-                        <ul>
-                            {supportingTools.map(tool => <li key={tool}>{tool}</li>)}
-                        </ul>
-                    </div>
-                </section>
-            );
-        };
-
-        const Experience = () => {
-            const { companies } = window.PORTFOLIO_DATA;
-            return (
-                <section id="experience" className="container">
-                    <h2 className="section-title">Professional Experience</h2>
-                    <div className="experience-list">
-                        {companies.map((company, index) => (
-                            <article key={company.name} className="glass-panel experience-card">
-                                <header className="experience-card-header">
-                                    <div className="experience-identity">
-                                        <div className="experience-company-line">
-                                            <p className="experience-company">{company.name}</p>
-                                            {company.engagementType && <span className="experience-engagement">{company.engagementType}</span>}
-                                        </div>
-                                        <h3 className="experience-role">{company.role}</h3>
-                                        {company.focus && <p className="experience-focus">{company.focus}</p>}
-                                    </div>
-                                    <div className="experience-meta" aria-label={`${company.duration}, ${company.location}`}>
-                                        <span className="experience-duration">{company.duration}</span>
-                                        <span>{company.location}</span>
-                                    </div>
-                                </header>
-
-                                {company.metrics && (
-                                    <div className="experience-metrics" aria-label={`${company.name} selected outcomes`}>
-                                        {company.metrics.map(metric => (
-                                            <div className="experience-metric" key={`${company.name}-${metric.label}`}>
-                                                <strong>{metric.value}</strong>
-                                                <span>{metric.label}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                                <ul className="experience-bullets">
-                                    {company.achievements.map(achievement => (
-                                        <li key={achievement}>{achievement}</li>
-                                    ))}
-                                </ul>
-                            </article>
-                        ))}
-                    </div>
-                </section>
-            );
-        };
-
-
-        const CaseStudySection = ({ number, title, children }) => (
-            <section className="case-study-section">
-                <div className="case-study-section-heading">
-                    <span aria-hidden="true">{number}</span>
-                    <h4>{title}</h4>
-                </div>
-                <div className="case-study-section-body">{children}</div>
-            </section>
-        );
-
-        const Projects = () => {
-            const { projects } = window.PORTFOLIO_DATA;
-            const [activeProject, setActiveProject] = useState(null);
-            const caseStudyTrigger = useRef(null);
-            const caseStudyDialog = useRef(null);
-
-            const closeCaseStudy = () => {
-                setActiveProject(null);
-                window.requestAnimationFrame(() => caseStudyTrigger.current?.focus());
-            };
-
-            useEffect(() => {
-                document.body.style.overflow = activeProject ? 'hidden' : '';
-
-                if (activeProject) {
-                    window.requestAnimationFrame(() => {
-                        caseStudyDialog.current?.querySelector('.case-study-close')?.focus();
-                    });
-                }
-
-                const closeOnEscape = (event) => {
-                    if (event.key === 'Escape' && activeProject) closeCaseStudy();
-
-                    if (event.key === 'Tab' && activeProject && caseStudyDialog.current) {
-                        const focusable = [...caseStudyDialog.current.querySelectorAll('a[href], button:not([disabled]), summary')];
-                        if (!focusable.length) return;
-                        const first = focusable[0];
-                        const last = focusable[focusable.length - 1];
-
-                        if (event.shiftKey && document.activeElement === first) {
-                            event.preventDefault();
-                            last.focus();
-                        } else if (!event.shiftKey && document.activeElement === last) {
-                            event.preventDefault();
-                            first.focus();
-                        }
-                    }
-                };
-
-                document.addEventListener('keydown', closeOnEscape);
-                return () => {
-                    document.body.style.overflow = '';
-                    document.removeEventListener('keydown', closeOnEscape);
-                };
-            }, [activeProject]);
-
-            const openCaseStudy = (project, event) => {
-                caseStudyTrigger.current = event.currentTarget;
-                setActiveProject(project);
-            };
-
-            return (
-                <section id="projects" className="container flagship-projects">
-                    <div className="projects-heading">
-                        <div>
-                            <p className="section-eyebrow">Selected product work</p>
-                            <h2 className="section-title">Flagship Projects</h2>
-                        </div>
-                        <p className="projects-intro">
-                            Production-focused AI human-data operations prototypes for dataset quality evaluation, worker calibration, deterministic task allocation, and campaign delivery control.
-                        </p>
-                    </div>
-
-                    <div className="project-grid">
-                        {projects.map((project, index) => (
-                            <article className={`project-card glass-panel project-card-${index + 1}`} key={project.id}>
-                                <div className="project-card-topline">
-                                    <span className="project-index">0{index + 1}</span>
-                                    <span className="project-category">{project.category}</span>
-                                </div>
-
-                                <div className="project-card-heading">
-                                    <h3>{project.title}</h3>
-                                    <p>{project.subtitle}</p>
-                                </div>
-
-                                {project.image && (
-                                    <div className="project-card-media">
-                                        <img src={project.image} alt={`${project.title} Overview`} className="project-card-thumbnail" loading="lazy" />
-                                    </div>
-                                )}
-
-                                <p className="project-description">{project.description}</p>
-
-                                {project.capabilities && project.capabilities.length > 0 && typeof project.capabilities[0] === 'string' && (
-                                    <div className="project-capabilities">
-                                        <h4>What it demonstrates</h4>
-                                        <ul>
-                                            {project.capabilities.slice(0, 3).map(capability => (
-                                                <li key={capability}>{capability}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
-
-                                {project.methods && project.methods.length > 0 && (
-                                    <div className="project-methods" aria-label={`${project.title} methods`}>
-                                        {project.methods.slice(0, 4).map(method => (
-                                            <span key={method}>{method}</span>
-                                        ))}
-                                    </div>
-                                )}
-
-                                <div className="project-actions">
-                                    <button
-                                        type="button"
-                                        className="btn-primary btn-compact project-case-study-button"
-                                        onClick={(event) => openCaseStudy(project, event)}
-                                    >
-                                        View Case Study
-                                    </button>
-                                    {project.demoUrl && (
-                                        <a
-                                            href={project.demoUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="btn-secondary btn-compact project-demo-link"
-                                        >
-                                            {project.demoLabel} <Icons.External />
-                                        </a>
-                                    )}
-                                    {project.githubUrl && (
-                                        <a
-                                            href={project.githubUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="btn-secondary btn-compact project-github-link"
-                                        >
-                                            GitHub <Icons.External />
-                                        </a>
-                                    )}
-                                    {!project.demoUrl && !project.githubUrl && (
-                                        <span className="project-coming-soon" aria-label={`${project.title} live demo coming soon`}>
-                                            Live Demo · {project.demoLabel}
-                                        </span>
-                                    )}
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-
-                    {activeProject && activeProject.caseStudy && (
-                        <div className="case-study-backdrop" onClick={closeCaseStudy}>
-                            <article
-                                className="case-study-dialog"
-                                ref={caseStudyDialog}
-                                role="dialog"
-                                aria-modal="true"
-                                aria-labelledby="case-study-title"
-                                onClick={(event) => event.stopPropagation()}
-                            >
-                                <header className="case-study-header">
-                                    <div className="case-study-header-copy">
-                                        <p className="case-study-kicker">{activeProject.category} · Case Study</p>
-                                        <h3 id="case-study-title">{activeProject.title}</h3>
-                                        <p className="case-study-subtitle">{activeProject.subtitle}</p>
-                                    </div>
-                                    <button type="button" className="case-study-close" onClick={closeCaseStudy} aria-label="Close case study">
-                                        ×
-                                    </button>
-                                </header>
-
-                                <div className="case-study-scroll">
-                                    {activeProject.id === "dataqual" ? (
-                                        <React.Fragment>
-                                            {/* A. Problem / Operational Context */}
-                                            <CaseStudySection number="01" title="Problem / Operational Context">
-                                                <p>{activeProject.caseStudy.problem}</p>
-                                            </CaseStudySection>
-
-                                            {/* B. What DataQual Does */}
-                                            <CaseStudySection number="02" title="What DataQual Does">
-                                                <div className="case-study-narrative">
-                                                    {activeProject.caseStudy.solution.split('\n\n').map((paragraph, idx) => (
-                                                        <p key={idx} style={{ marginBottom: idx < activeProject.caseStudy.solution.split('\n\n').length - 1 ? '12px' : 0 }}>{paragraph}</p>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* C. Key Capabilities */}
-                                            <CaseStudySection number="03" title="Key Capabilities">
-                                                <div className="case-study-capabilities-grid">
-                                                    {activeProject.caseStudy.capabilities.map((capGroup, idx) => (
-                                                        <div className="case-study-cap-card" key={idx}>
-                                                            <h5>{capGroup.domain}</h5>
-                                                            <ul>
-                                                                {capGroup.items.map((item, itemIdx) => (
-                                                                    <li key={itemIdx}>{item}</li>
-                                                                ))}
-                                                            </ul>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* D. Selected Product Screenshots */}
-                                            <CaseStudySection number="04" title="Selected Product Screenshots">
-                                                <div className="case-study-gallery">
-                                                    {activeProject.caseStudy.screenshots.map((shot) => (
-                                                        <figure key={shot.id} className="case-study-figure">
-                                                            <div className="case-study-img-wrap">
-                                                                <img src={shot.src} alt={shot.alt} loading="lazy" />
-                                                            </div>
-                                                            <figcaption className="case-study-caption">
-                                                                <strong>{shot.label}</strong> — {shot.caption}
-                                                            </figcaption>
-                                                        </figure>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* E. Validation & Methodological Rigor */}
-                                            <CaseStudySection number="05" title="Validation & Methodological Rigor">
-                                                <div className="case-study-validation-grid">
-                                                    <div className="case-study-val-card">
-                                                        <h5>{activeProject.caseStudy.validation.compatibility.title}</h5>
-                                                        <p>{activeProject.caseStudy.validation.compatibility.detail}</p>
-                                                    </div>
-                                                    <div className="case-study-val-card">
-                                                        <h5>{activeProject.caseStudy.validation.historicalCorrection.title}</h5>
-                                                        <p>{activeProject.caseStudy.validation.historicalCorrection.detail}</p>
-                                                    </div>
-                                                    <div className="case-study-val-card">
-                                                        <h5>{activeProject.caseStudy.validation.realBenchmark.title}</h5>
-                                                        <p>{activeProject.caseStudy.validation.realBenchmark.detail}</p>
-                                                    </div>
-                                                    <div className="case-study-val-card highlight-val">
-                                                        <h5>{activeProject.caseStudy.validation.syntheticBenchmark.title}</h5>
-                                                        <p>{activeProject.caseStudy.validation.syntheticBenchmark.detail}</p>
-                                                    </div>
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* F. Technical Architecture */}
-                                            <CaseStudySection number="06" title="Technical Architecture">
-                                                <div className="case-study-arch-grid">
-                                                    {activeProject.caseStudy.architecture.map((arch, idx) => (
-                                                        <div className="case-study-arch-card" key={idx}>
-                                                            <span className="arch-cat">{arch.category}</span>
-                                                            <p className="arch-stack">{arch.stack}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* G. Live Release Status */}
-                                            <CaseStudySection number="07" title="Live Release Status">
-                                                <div className="case-study-release-card">
-                                                    <div className="release-badge-row">
-                                                        <span className="release-version">{activeProject.caseStudy.releaseStatus.version}</span>
-                                                        <span className="release-tag">{activeProject.caseStudy.releaseStatus.typeLabel}</span>
-                                                    </div>
-                                                    <div className="release-links">
-                                                        <a href={activeProject.caseStudy.releaseStatus.liveDemoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary btn-compact">
-                                                            Live Demo <Icons.External />
-                                                        </a>
-                                                        <a href={activeProject.caseStudy.releaseStatus.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-compact">
-                                                            GitHub Repository <Icons.External />
-                                                        </a>
-                                                        <a href={activeProject.caseStudy.releaseStatus.apiUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-compact">
-                                                            Backend API <Icons.External />
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* H. Key Takeaway */}
-                                            <CaseStudySection number="08" title="Key Takeaway">
-                                                <p className="case-study-takeaway">{activeProject.caseStudy.keyTakeaway}</p>
-                                            </CaseStudySection>
-                                        </React.Fragment>
-                                    ) : activeProject.id === "opspilot" ? (
-                                        <React.Fragment>
-                                            {/* 01 Problem / Operational Context */}
-                                            <CaseStudySection number="01" title="Problem / Operational Context">
-                                                <div className="case-study-narrative">
-                                                    {activeProject.caseStudy.problem.split('\n\n').map((paragraph, idx) => (
-                                                        <p key={idx} style={{ marginBottom: idx < activeProject.caseStudy.problem.split('\n\n').length - 1 ? '12px' : 0 }}>{paragraph}</p>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* 02 What OpsPilot Does */}
-                                            <CaseStudySection number="02" title="What OpsPilot Does">
-                                                <div className="case-study-narrative">
-                                                    {activeProject.caseStudy.solution.split('\n\n').map((paragraph, idx) => (
-                                                        <p key={idx} style={{ marginBottom: idx < activeProject.caseStudy.solution.split('\n\n').length - 1 ? '12px' : 0 }}>{paragraph}</p>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* 03 Core Workflow */}
-                                            <CaseStudySection number="03" title="Core Workflow">
-                                                <ol className="case-study-workflow">
-                                                    {activeProject.caseStudy.workflow.map((item, idx) => (
-                                                        <li key={idx}>{item}</li>
-                                                    ))}
-                                                </ol>
-                                            </CaseStudySection>
-
-                                            {/* 04 Selected Product Screenshots */}
-                                            <CaseStudySection number="04" title="Selected Product Screenshots">
-                                                <div className="case-study-gallery">
-                                                    {activeProject.caseStudy.screenshots.map((shot) => (
-                                                        <figure key={shot.id} className="case-study-figure">
-                                                            <div className="case-study-img-wrap">
-                                                                <img src={shot.src} alt={shot.alt} loading="lazy" />
-                                                            </div>
-                                                            <figcaption className="case-study-caption">
-                                                                <strong>{shot.label}</strong> — {shot.caption}
-                                                            </figcaption>
-                                                        </figure>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* 05 Operational Logic */}
-                                            <CaseStudySection number="05" title="Operational Logic">
-                                                <div className="case-study-validation-grid">
-                                                    {activeProject.caseStudy.logic.map((item, idx) => (
-                                                        <div className="case-study-val-card" key={idx}>
-                                                            <h5>{item.mechanism}</h5>
-                                                            <p>{item.detail}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* 06 Technical Architecture */}
-                                            <CaseStudySection number="06" title="Technical Architecture">
-                                                <div className="case-study-arch-grid">
-                                                    {activeProject.caseStudy.architecture.map((arch, idx) => (
-                                                        <div className="case-study-arch-card" key={idx}>
-                                                            <span className="arch-cat">{arch.category}</span>
-                                                            <p className="arch-stack">{arch.stack}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* 07 Validation & Release */}
-                                            <CaseStudySection number="07" title="Validation & Release">
-                                                <div className="case-study-validation-grid">
-                                                    {activeProject.caseStudy.validation.map((item, idx) => (
-                                                        <div className="case-study-val-card" key={idx}>
-                                                            <h5>{item.title}</h5>
-                                                            <p>{item.detail}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                <div className="case-study-release-card" style={{ marginTop: '16px' }}>
-                                                    <div className="release-badge-row">
-                                                        <span className="release-version">{activeProject.caseStudy.releaseStatus.version}</span>
-                                                        <span className="release-tag">{activeProject.caseStudy.releaseStatus.typeLabel}</span>
-                                                    </div>
-                                                    <div className="release-links">
-                                                        <a href={activeProject.caseStudy.releaseStatus.liveDemoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary btn-compact">
-                                                            Live Demo <Icons.External />
-                                                        </a>
-                                                        <a href={activeProject.caseStudy.releaseStatus.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-compact">
-                                                            GitHub Repository <Icons.External />
-                                                        </a>
-                                                        <a href={activeProject.caseStudy.releaseStatus.apiUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary btn-compact">
-                                                            Backend API <Icons.External />
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </CaseStudySection>
-
-                                            {/* 08 Key Takeaway */}
-                                            <CaseStudySection number="08" title="Key Takeaway">
-                                                <p className="case-study-takeaway">{activeProject.caseStudy.keyTakeaway}</p>
-                                            </CaseStudySection>
-                                        </React.Fragment>
-                                    ) : (
-                                        <React.Fragment>
-                                            <div className="case-study-intro">
-                                                <span>{activeProject.demoUrl ? 'Interactive portfolio prototype' : 'Portfolio prototype · Demo coming soon'}</span>
-                                                <p>{activeProject.description}</p>
-                                            </div>
-
-                                            <CaseStudySection number="01" title="Problem">
-                                                <p>{activeProject.caseStudy.problem}</p>
-                                            </CaseStudySection>
-
-                                            <CaseStudySection number="02" title="Solution">
-                                                <p>{activeProject.caseStudy.solution}</p>
-                                            </CaseStudySection>
-
-                                            <CaseStudySection number="03" title="Workflow">
-                                                <ol className="case-study-workflow">
-                                                    {activeProject.caseStudy.workflow.map(item => <li key={item}>{item}</li>)}
-                                                </ol>
-                                            </CaseStudySection>
-
-                                            <CaseStudySection number="04" title="Quality Methods">
-                                                <ul className="case-study-method-list">
-                                                    {activeProject.caseStudy.qualityMethods.map(item => <li key={item}>{item}</li>)}
-                                                </ul>
-                                            </CaseStudySection>
-
-                                            <CaseStudySection number="05" title="Technical Implementation">
-                                                <ul>
-                                                    {activeProject.caseStudy.technicalImplementation.map(item => <li key={item}>{item}</li>)}
-                                                </ul>
-                                            </CaseStudySection>
-
-                                            <CaseStudySection number="06" title="Why I Built It">
-                                                <p>{activeProject.caseStudy.whyBuilt}</p>
-                                            </CaseStudySection>
-
-                                            <CaseStudySection number="07" title="Project Disclosure">
-                                                <p className="case-study-disclosure">{activeProject.caseStudy.disclosure}</p>
-                                            </CaseStudySection>
-                                        </React.Fragment>
-                                    )}
-
-                                    <footer className="case-study-footer">
-                                        {activeProject.demoUrl && (
-                                            <a href={activeProject.demoUrl} target="_blank" rel="noopener noreferrer" className="btn-primary project-demo-link">
-                                                Open Live Demo <Icons.External />
-                                            </a>
-                                        )}
-                                        {activeProject.githubUrl && (
-                                            <a href={activeProject.githubUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary project-github-link">
-                                                GitHub Repository <Icons.External />
-                                            </a>
-                                        )}
-                                        <button type="button" className="btn-secondary" onClick={closeCaseStudy}>Close</button>
-                                    </footer>
-                                </div>
-                            </article>
-                        </div>
-                    )}
-                </section>
-            );
-        };
-
-        const Education = () => {
-            const { education, certifications } = window.PORTFOLIO_DATA;
-            return (
-                <section id="education" className="container" aria-labelledby="education-heading">
-                    <h2 id="education-heading" className="section-title">Education &amp; Certifications</h2>
-                    <div className="education-cert-grid">
-                        <div className="education-list" aria-label="Education">
-                            {education.map((edu, index) => (
-                                <article key={edu.degree} className="glass-panel education-item">
-                                    <div className="education-content">
-                                        <p className="education-degree">{edu.degree}</p>
-                                        <h3>{edu.field}</h3>
-                                        <p className="education-school">{edu.school}</p>
-                                        {edu.detail && <p className="education-detail">{edu.detail}</p>}
-                                    </div>
-                                    <span className="education-year">{edu.status}</span>
-                                </article>
-                            ))}
-                        </div>
-                        <aside className="glass-panel certification-list" aria-labelledby="certifications-heading">
-                            <h3 id="certifications-heading">Selected Certifications</h3>
-                            <ul className="featured-certifications">
-                                {certifications.featured.map(cert => (
-                                    <li key={cert}>
-                                        <span className="certification-marker" aria-hidden="true"></span>
-                                        {cert}
-                                    </li>
-                                ))}
-                            </ul>
-                            <details className="additional-certifications">
-                                <summary>Additional certifications</summary>
-                                <ul>
-                                    {certifications.additional.map(cert => <li key={cert}>{cert}</li>)}
-                                </ul>
-                            </details>
-                        </aside>
-                    </div>
-                </section>
-            );
-        };
-
-        const Contact = () => {
-            const { personal } = window.PORTFOLIO_DATA;
-            const resumeHref = personal.resumeUrl || `mailto:${personal.email}?subject=Resume Request`;
-
-            return (
-                <section id="contact" className="container contact-section" aria-labelledby="contact-heading">
-                    <div className="contact-panel glass-panel">
-                        <p className="section-eyebrow">Contact</p>
-                        <h2 id="contact-heading">Let's Connect</h2>
-                        <p className="contact-copy">
-                            I'm interested in opportunities across AI Data Operations, AI Evaluation, Technical QA, and AI Project Operations.
-                        </p>
-                        <div className="contact-actions" aria-label="Contact options">
-                            <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="btn-primary">
-                                <Icons.Linkedin /> LinkedIn
-                            </a>
-                            <a href={`mailto:${personal.email}`} className="btn-secondary">
-                                <Icons.Mail /> Email
-                            </a>
-                            <a href={resumeHref} className="btn-tertiary">
-                                Request Resume
-                            </a>
-                        </div>
-                    </div>
-                </section>
-            );
-        }
-
-        const Footer = () => {
-            return (
-                <footer className="site-footer">
-                    <div className="container site-footer-inner">
-                        <span>© 2026 Kevin Prashant Veigas. All rights reserved.</span>
-                        <a href="#top">Back to top</a>
-                    </div>
-                </footer>
-            );
-        }
-
-        const App = () => {
-            return (
-                <React.Fragment>
-                    <WaveBackground />
-                    <div className="vignette-overlay" aria-hidden="true"></div>
-                    <Navbar />
-                    <main id="main-content" tabIndex="-1">
-                        <Hero />
-                        <ImpactStrip />
-                        <Experience />
-                        <Projects />
-                        <CoreCapabilities />
-                        <Education />
-                        <Contact />
-                    </main>
-                    <Footer />
-                </React.Fragment>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Kevin Veigas, back to top">
+        <span class="brand-mark" aria-hidden="true">KV</span>
+        <span class="brand-name">Kevin Veigas</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <ul id="site-menu">
+          <li><a href="#work">Work</a></li>
+          <li><a href="#approach">Approach</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-button" type="button" data-theme-toggle aria-label="Switch theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+        </button>
+        <button class="icon-button menu-button" type="button" data-menu-toggle aria-expanded="false" aria-controls="site-menu" aria-label="Menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">AI data operations · Evaluation · Technical QA</p>
+          <h1 id="hero-title">Human data for AI, <em>measured</em> — not assumed.</h1>
+          <p class="lede">
+            I’m Kevin Veigas. I run annotation, review and evaluation operations for AI, and build open-source tools that
+            show a team which labels to trust, where review effort pays off, and when a dataset is ready to ship.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#work">See the work</a>
+            <a class="button button-ghost" href="#contact">Get in touch</a>
+          </div>
+          <p class="availability"><span class="pulse" aria-hidden="true"></span>Open to remote and global roles in AI data operations, evaluation and QA</p>
+        </div>
+
+        <figure class="sim-card" data-hero-sim aria-labelledby="sim-title" aria-describedby="sim-caption">
+          <div class="sim-head">
+            <div>
+              <p class="sim-kicker">Live simulation</p>
+              <h2 class="sim-title" id="sim-title">Adaptive label collection</h2>
+            </div>
+            <button class="chip-button" type="button" data-sim-toggle aria-pressed="false">
+              <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10M11 3v10"/></svg>
+              <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3l8 5-8 5z"/></svg>
+              <span data-label>Pause</span>
+            </button>
+          </div>
+          <div class="sim-stage">
+            <canvas role="img" aria-label="Annotators with different reliability send labels to a grid of items. Items fill in once their consensus is confident; contested items are flagged for expert review."></canvas>
+            <div class="sim-tooltip" data-sim-tooltip hidden></div>
+          </div>
+          <dl class="sim-stats">
+            <div><dt>Labels collected</dt><dd data-sim="used">0</dd></div>
+            <div><dt>At 5 labels per item</dt><dd data-sim="fixed">0</dd></div>
+            <div><dt>Saved</dt><dd data-sim="saved">—</dd></div>
+            <div><dt>Settled</dt><dd data-sim="settled">0</dd></div>
+            <div><dt>Expert review</dt><dd data-sim="expert">0</dd></div>
+          </dl>
+          <ul class="sim-legend" aria-label="Legend">
+            <li><span class="lg-dot lg-agree"></span>Agreeing label</li>
+            <li><span class="lg-dot lg-dissent"></span>Dissenting label</li>
+            <li><span class="lg-dot lg-settled"></span>Settled</li>
+            <li><span class="lg-dot lg-expert">!</span>Expert review</li>
+          </ul>
+          <figcaption id="sim-caption">
+            An illustration of DataQual’s stopping rule. Each item keeps asking annotators for labels until a worker
+            model is 95% confident (minimum two); items still contested after five go to an expert. Measured results
+            are under <a href="#dataqual">DataQual</a>.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Impact -->
+    <section class="impact" aria-labelledby="impact-title">
+      <div class="container">
+        <h2 class="visually-hidden" id="impact-title">Selected results from production work</h2>
+        <ul class="impact-grid">
+          <li data-reveal><strong>15,000+</strong><span>computer-vision images validated at 99%+ dataset quality</span></li>
+          <li data-reveal><strong>~85% → 93%</strong><span>annotation accuracy after a calibration program I ran</span></li>
+          <li data-reveal><strong>15</strong><span>annotation team members led and coached</span></li>
+          <li data-reveal><strong>19</strong><span>production AI systems monitored in Grafana</span></li>
+          <li data-reveal><strong>~30%</strong><span>shorter QA and rework cycle</span></li>
+          <li data-reveal><strong>~35%</strong><span>faster issue response through drift monitoring</span></li>
+        </ul>
+        <p class="impact-note">From my AI data operations contract at Maneva Inc., 2025.</p>
+      </div>
+    </section>
+
+    <!-- Work -->
+    <section class="section" id="work" aria-labelledby="work-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="eyebrow">Selected work</p>
+          <h2 id="work-title">Two systems for the human-data loop</h2>
+          <p class="section-intro">
+            DataQual decides which labels to trust and when to stop collecting them. OpsPilot runs the campaign that
+            produces them. Both are open source, tested, and published with their limits and negative results.
+          </p>
+        </header>
+
+        <!-- DataQual -->
+        <article class="project" id="dataqual" aria-labelledby="dq-title">
+          <div class="project-intro" data-reveal>
+            <div class="project-meta">
+              <span class="project-index">01</span>
+              <span class="tag">Annotation quality</span>
+              <span class="tag">Python · FastAPI · React</span>
+            </div>
+            <h3 id="dq-title" class="project-title">DataQual</h3>
+            <p class="project-tagline">Evidence-driven annotation quality, review prioritization and adaptive label collection.</p>
+            <p class="project-body">
+              Turns raw multi-annotator labels into agreement statistics with intervals, consensus under different
+              assumptions (majority vote vs. a from-scratch Dawid–Skene worker model), annotator reliability with
+              credible intervals, explainable disagreement flags and a ranked review queue. Its newest module
+              decides, item by item, whether to stop paying for labels, ask for more, or escalate to an expert.
+            </p>
+            <ul class="project-stats">
+              <li><strong>25–63%</strong><span>fewer labels at 7–9 labels per item, within 0.8 accuracy points <em>(exploratory)</em></span></li>
+              <li><strong>+27.4 pts</strong><span>accuracy over majority vote when some annotators are adversarial</span></li>
+              <li><strong>100%</strong><span>label parity with the Crowd-Kit reference on a real benchmark</span></li>
+            </ul>
+            <div class="project-links">
+              <button class="button button-primary" type="button" data-open-dialog="case-dataqual">Read the case study</button>
+              <a class="button button-ghost" href="https://kveigas.github.io/dataqual/" target="_blank" rel="noopener">Live demo <span class="ext" aria-hidden="true">↗</span></a>
+              <a class="button button-ghost" href="https://github.com/kveigas/dataqual" target="_blank" rel="noopener">Source <span class="ext" aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+
+          <div class="evidence-card" data-reveal>
+            <div class="evidence-head">
+              <p class="evidence-kicker">Evidence · 12 synthetic scenarios · 5 seeds each</p>
+              <div class="tabs" role="tablist" aria-label="DataQual evidence">
+                <button role="tab" id="tab-savings" aria-controls="panel-savings" aria-selected="true" tabindex="0">Label savings</button>
+                <button role="tab" id="tab-worker" aria-controls="panel-worker" aria-selected="false" tabindex="-1">Model vs. vote</button>
+                <button role="tab" id="tab-ranking" aria-controls="panel-ranking" aria-selected="false" tabindex="-1">Ranking</button>
+              </div>
+            </div>
+
+            <div class="evidence-panel" role="tabpanel" id="panel-savings" aria-labelledby="tab-savings" data-panel="savings">
+              <h4 class="panel-title">How many labels does each item really need?</h4>
+              <p class="panel-summary" data-summary="savings" aria-live="polite"></p>
+              <div class="controls">
+                <fieldset class="segmented">
+                  <legend>Redundancy</legend>
+                  <label><input type="radio" name="dq-design" value="standard" checked><span>3–5 labels</span></label>
+                  <label><input type="radio" name="dq-design" value="high"><span>7–9 labels</span></label>
+                </fieldset>
+                <fieldset class="segmented" data-control="target">
+                  <legend>Stop at confidence</legend>
+                  <label><input type="radio" name="dq-target" value="0.9"><span>90%</span></label>
+                  <label><input type="radio" name="dq-target" value="0.95" checked><span>95%</span></label>
+                  <label><input type="radio" name="dq-target" value="0.99"><span>99%</span></label>
+                </fieldset>
+              </div>
+              <ul class="legend">
+                <li><span class="key key-a"></span>Adaptive: stop when confident</li>
+                <li><span class="key key-b"></span>Collect every label</li>
+              </ul>
+              <div class="chart-frame" data-chart="savings"></div>
+              <p class="chart-note" data-note="savings" hidden>Exploratory design, not pre-registered: the scenarios were re-run with 7–9 labels per item to test whether savings grow with redundancy.</p>
+              <details class="chart-table"><summary>Show the data</summary><div data-table="savings"></div></details>
+              <p class="chart-source">Labels per item, averaged over seeds 100–104 (simulator 1.1.0). Source: <a href="https://github.com/kveigas/dataqual/tree/main/docs/evidence" target="_blank" rel="noopener">docs/evidence/adaptive-collection</a>.</p>
+            </div>
+
+            <div class="evidence-panel" role="tabpanel" id="panel-worker" aria-labelledby="tab-worker" data-panel="worker-model" hidden>
+              <h4 class="panel-title">When does a worker model beat a plain vote?</h4>
+              <p class="panel-summary">Modeling each annotator’s reliability matters most when annotators differ — +27.4 points with adversarial annotators — and costs a little (up to 0.8 points) where they are alike. Both cases are shown.</p>
+              <ul class="legend">
+                <li><span class="key key-a"></span>Dawid–Skene worker model</li>
+                <li><span class="key key-b"></span>Majority vote</li>
+              </ul>
+              <div class="chart-frame" data-chart="worker-model"></div>
+              <details class="chart-table"><summary>Show the data</summary><div data-table="worker-model"></div></details>
+              <p class="chart-source">Accuracy against hidden truth using every label, 3–5 per item. Same source as label savings.</p>
+            </div>
+
+            <div class="evidence-panel" role="tabpanel" id="panel-ranking" aria-labelledby="tab-ranking" data-panel="ranking" hidden>
+              <h4 class="panel-title">A negative result, kept in the open</h4>
+              <p class="panel-summary">My composite review score (ERV) never had the best mean in any of the 12 scenarios — a simple baseline (vote entropy or worker reliability) always did, often narrowly. I published the result rather than tuning the score against the test scenarios.</p>
+              <ul class="legend">
+                <li><span class="key key-a"></span>ERV (composite score)</li>
+                <li><span class="key key-b"></span>Best simple baseline</li>
+                <li><span class="key key-muted"></span>Other baselines</li>
+              </ul>
+              <div class="chart-frame" data-chart="ranking"></div>
+              <details class="chart-table"><summary>Show the data</summary><div data-table="ranking"></div></details>
+              <p class="chart-source">Mean normalized area under the error-recovery curve at a 20% review budget (higher is better). Source: <a href="https://github.com/kveigas/dataqual/tree/main/docs/evidence" target="_blank" rel="noopener">docs/evidence/review-ranking-v2</a>.</p>
+            </div>
+          </div>
+
+          <figure class="shot" data-reveal>
+            <div class="shot-frame">
+              <img src="assets/dataqual/dataqual-collection.jpg" width="1440" height="900" loading="lazy" decoding="async"
+                alt="DataQual's Label collection view: 80 of 100 items settled, 20 need more labels, none need an expert, with a table of the most uncertain items.">
+            </div>
+            <figcaption>The Label collection view: settled items stop costing money; the rest show exactly how many more labels they need.</figcaption>
+          </figure>
+        </article>
+
+        <!-- OpsPilot -->
+        <article class="project" id="opspilot" aria-labelledby="op-title">
+          <div class="project-intro" data-reveal>
+            <div class="project-meta">
+              <span class="project-index">02</span>
+              <span class="tag">Campaign operations</span>
+              <span class="tag">Python · FastAPI · React</span>
+            </div>
+            <h3 id="op-title" class="project-title">OpsPilot</h3>
+            <p class="project-tagline">An operations cockpit for human-data campaigns, from intake to a defensible delivery.</p>
+            <p class="project-body">
+              Covers the loop a campaign manager owns: calibration-gated eligibility, quality-aware allocation with a
+              recorded reason, a 10-state task machine, keyboard-first QA, escalations, a Monte Carlo completion
+              forecast and five delivery gates. Each operation commits atomically with its audit record. The API is
+              idempotent, so a client can safely retry after a timeout.
+            </p>
+            <ol class="flow" aria-label="Campaign workflow">
+              <li>Intake</li><li>Calibrate</li><li>Allocate</li><li>Execute</li><li class="is-key">Adaptive QA</li><li>Escalate</li><li>Deliver</li>
+            </ol>
+            <ul class="project-stats">
+              <li><strong>½</strong><span>the undetected errors of uniform review at the same review budget (1.8% vs 3.5%)</span></li>
+              <li><strong>43%</strong><span>fewer reviews than uniform review for the same delivered quality</span></li>
+              <li><strong>40 / 40</strong><span>synthetic workforces where adaptive QA beat uniform review at the same budget</span></li>
+            </ul>
+            <div class="project-links">
+              <button class="button button-primary" type="button" data-open-dialog="case-opspilot">Read the case study</button>
+              <a class="button button-ghost" href="https://kveigas.github.io/opspilot/" target="_blank" rel="noopener">Live demo <span class="ext" aria-hidden="true">↗</span></a>
+              <a class="button button-ghost" href="https://github.com/kveigas/opspilot" target="_blank" rel="noopener">Source <span class="ext" aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+
+          <div class="evidence-card" data-reveal>
+            <div class="evidence-head">
+              <p class="evidence-kicker">Evidence · 40 paired synthetic workforces · 12 annotators, 10 days each</p>
+            </div>
+            <div class="evidence-panel" data-panel="qa">
+              <h4 class="panel-title">Review where the errors are</h4>
+              <p class="panel-summary">Trust-based QA spot-checks proven annotators at 5% and reviews struggling ones in full. Compared with reviewing everyone at the same rate, it ships half the errors for the same effort.</p>
+              <ul class="legend">
+                <li><span class="key key-a"></span>Adaptive QA (dot = one world; large dot = mean)</li>
+                <li><span class="key key-b"></span>Uniform review (line = expected; dots = measured)</li>
+              </ul>
+              <div class="chart-frame chart-frame-tall" data-chart="qa"></div>
+              <details class="chart-table"><summary>Show the data</summary><div data-table="qa"></div></details>
+              <p class="chart-source">Synthetic workforces: a quarter of annotators weak (mean accuracy 0.85), the rest strong (0.97); perfect reviewers assumed. Source: <a href="https://github.com/kveigas/opspilot/tree/main/docs/evidence" target="_blank" rel="noopener">docs/evidence/ADAPTIVE_QA.md</a>.</p>
+            </div>
+          </div>
+
+          <figure class="shot" data-reveal>
+            <div class="shot-frame">
+              <img src="assets/opspilot/opspilot-today.jpg" width="1440" height="900" loading="lazy" decoding="async"
+                alt="OpsPilot's Today view: a next-best-action card telling the manager to resolve one open escalation, campaign health marked critical with reasons, and a completion forecast.">
+            </div>
+            <figcaption>The Today view leads with one next action and the evidence behind it, not a wall of charts.</figcaption>
+          </figure>
+        </article>
+      </div>
+    </section>
+
+    <!-- Approach -->
+    <section class="section section-tint" id="approach" aria-labelledby="approach-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="eyebrow">Approach</p>
+          <h2 id="approach-title">How I work</h2>
+        </header>
+        <ol class="principles">
+          <li data-reveal>
+            <span class="principle-num">01</span>
+            <h3>Evidence before claims</h3>
+            <p>Every result ships with its method, seeds and limits. When a method I built loses to a simpler baseline, the loss gets published, not tuned away.</p>
+          </li>
+          <li data-reveal>
+            <span class="principle-num">02</span>
+            <h3>Make uncertainty visible</h3>
+            <p>Intervals, posterior confidence and an explicit “not enough evidence” state, instead of one opaque quality score that hides how little is known.</p>
+          </li>
+          <li data-reveal>
+            <span class="principle-num">03</span>
+            <h3>Design for the operator</h3>
+            <p>Next-best actions, plain-language reasons, keyboard-first review and an audit trail a manager can defend to a client.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="section" id="experience" aria-labelledby="experience-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="eyebrow">Experience</p>
+          <h2 id="experience-title">Where I’ve done this work</h2>
+        </header>
+
+        <ol class="timeline">
+          <li class="role" data-reveal>
+            <div class="role-when"><span>Jun 2026 – Present</span><span>Remote</span></div>
+            <div class="role-body">
+              <h3>Business Operations Specialist (AI Training) <span class="at">· micro1</span></h3>
+              <p class="role-focus">AI training operations and data review</p>
+              <ul>
+                <li>Build multi-application business workflows across Excel, PowerPoint, Word, Teams and Outlook as realistic training tasks for frontier AI agents.</li>
+                <li>Review submitted workflows against detailed rubrics, verifying UI states, task completion, selections and full-desktop context.</li>
+              </ul>
+              <details>
+                <summary>More detail</summary>
+                <ul>
+                  <li>Identify workflow inconsistencies, task defects and rubric failures, documented as structured reviewer feedback.</li>
+                  <li>Work as both contributor and reviewer, iterating captured workflows on evaluator feedback to improve consistency.</li>
+                </ul>
+              </details>
+            </div>
+          </li>
+
+          <li class="role" data-reveal>
+            <div class="role-when"><span>2026 – Present</span><span>Remote · Fellowship</span></div>
+            <div class="role-body">
+              <h3>AI Training Fellow, Project Seal <span class="at">· Handshake AI</span></h3>
+              <p class="role-focus">AI evaluation and adversarial research</p>
+              <ul>
+                <li>Design adversarial prompts that expose reasoning failures in frontier models, focusing on information buried in tables, PDFs and images, and on conflicting authoritative sources.</li>
+                <li>Document each failure pattern in structured, evidence-based formats for the research team’s evaluation pipeline.</li>
+              </ul>
+              <details>
+                <summary>More detail</summary>
+                <ul>
+                  <li>Prioritize novel, high-signal failure modes over repeats of known weaknesses.</li>
+                </ul>
+              </details>
+            </div>
+          </li>
+
+          <li class="role" data-reveal>
+            <div class="role-when"><span>Aug – Oct 2025</span><span>Remote, Canada · Contract</span></div>
+            <div class="role-body">
+              <h3>AI Data Operations Specialist <span class="at">· Maneva Inc.</span></h3>
+              <p class="role-focus">Annotation quality and production AI monitoring</p>
+              <ul class="role-metrics" aria-label="Maneva results">
+                <li><strong>15,000+</strong> images validated</li>
+                <li><strong>99%+</strong> dataset quality</li>
+                <li><strong>85→93%</strong> annotation accuracy</li>
+                <li><strong>19</strong> systems monitored</li>
+              </ul>
+              <ul>
+                <li>Ran cross-functional calibration and quality-alignment workflows that lifted annotation accuracy from about 85% to 93% and cut QA cycle time by about 30%.</li>
+                <li>Validated 15,000+ computer-vision images with dataset checks and anomaly-detection routines, sustaining 99%+ dataset quality.</li>
+              </ul>
+              <details>
+                <summary>More detail</summary>
+                <ul>
+                  <li>Monitored 19 deployed AI systems through Grafana dashboards with pipeline-health, performance and blocker reporting, contributing to about 35% faster issue response.</li>
+                  <li>Led and coordinated a 15-member annotation team, using performance visibility and quality coaching to meet production benchmarks.</li>
+                  <li>Used SQL in QA and analysis, translating implementation details into dashboards, documentation and reporting.</li>
+                </ul>
+              </details>
+            </div>
+          </li>
+
+          <li class="role" data-reveal>
+            <div class="role-when"><span>Dec 2023 – Feb 2024</span><span>Remote</span></div>
+            <div class="role-body">
+              <h3>Associate Project Coordinator, AI/ML Operations <span class="at">· ParallelDots</span></h3>
+              <p class="role-focus">Computer-vision delivery for FMCG clients</p>
+              <ul class="role-metrics" aria-label="ParallelDots results">
+                <li><strong>4</strong> client accounts</li>
+                <li><strong>3</strong> time zones</li>
+                <li><strong>~20%</strong> shorter cycle time</li>
+              </ul>
+              <ul>
+                <li>Coordinated shelf-monitoring and product-recognition implementations across four FMCG accounts and three time zones, gathering requirements and communicating model outputs.</li>
+                <li>Analyzed delivery bottlenecks with ML engineers and coordinated model retraining, cutting overall cycle time by about 20%.</li>
+              </ul>
+              <details>
+                <summary>More detail</summary>
+                <ul>
+                  <li>Supported implementation quality monitoring for systems running at 90%+ model accuracy, aligning client feedback and acceptance criteria with technical teams.</li>
+                  <li>Tracked requests, decisions and follow-ups in Jira and Confluence using Agile, Scrum and Kanban.</li>
+                </ul>
+              </details>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Skills & education -->
+    <section class="section section-tint" id="skills" aria-labelledby="skills-title">
+      <div class="container">
+        <header class="section-head" data-reveal>
+          <p class="eyebrow">Skills &amp; education</p>
+          <h2 id="skills-title">What I bring</h2>
+        </header>
+        <div class="skills-grid">
+          <section class="skill-group" data-reveal aria-labelledby="sk-1">
+            <h3 id="sk-1">AI data operations</h3>
+            <ul><li>Dataset validation</li><li>Annotation operations</li><li>Reviewer workflows</li><li>Data quality</li><li>Model monitoring</li><li>Anomaly detection</li></ul>
+          </section>
+          <section class="skill-group" data-reveal aria-labelledby="sk-2">
+            <h3 id="sk-2">AI evaluation</h3>
+            <ul><li>Rubric-based evaluation</li><li>Preference ranking</li><li>Calibration</li><li>Inter-annotator agreement</li><li>Disagreement analysis</li><li>Adversarial red-teaming</li></ul>
+          </section>
+          <section class="skill-group" data-reveal aria-labelledby="sk-3">
+            <h3 id="sk-3">Technical QA</h3>
+            <ul><li>SQL</li><li>Python</li><li>Grafana</li><li>Root-cause analysis</li><li>Issue reporting</li><li>Workflow validation</li></ul>
+          </section>
+          <section class="skill-group" data-reveal aria-labelledby="sk-4">
+            <h3 id="sk-4">Project operations</h3>
+            <ul><li>Agile delivery</li><li>Stakeholder communication</li><li>KPI reporting</li><li>Documentation</li><li>Jira · Confluence</li><li>Cross-functional coordination</li></ul>
+          </section>
+        </div>
+
+        <div class="edu-grid">
+          <section data-reveal aria-labelledby="edu-title">
+            <h3 class="subhead" id="edu-title">Education</h3>
+            <ul class="edu-list">
+              <li><div><strong>MSc, AI &amp; Technology Management</strong><span>Nexford University · online, U.S.-accredited</span></div><em>In progress</em></li>
+              <li><div><strong>Postgraduate Certificate, IT Project Management</strong><span>Conestoga College · Distinction, Dean’s Honour List</span></div><em>Dec 2024</em></li>
+              <li><div><strong>BE, Computer Science</strong><span>Visvesvaraya Technological University · First Class</span></div><em>Sep 2023</em></li>
+            </ul>
+          </section>
+          <section data-reveal aria-labelledby="cert-title">
+            <h3 class="subhead" id="cert-title">Certifications</h3>
+            <ul class="cert-list">
+              <li>CAPM — Certified Associate in Project Management (PMI)</li>
+              <li>Certified ScrumMaster (CSM) — Scrum Alliance</li>
+              <li>AI Product Management — Duke University</li>
+              <li>Managing Machine Learning Projects — Duke University</li>
+              <li>Deep Learning Specialization — Coursera / Andrew Ng</li>
+              <li>Machine Learning — Stanford University</li>
+              <li>Competitive Strategy &amp; Managerial Economics</li>
+              <li>Excel for Business — Illinois Tech</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="container contact-inner" data-reveal>
+        <p class="eyebrow">Contact</p>
+        <h2 id="contact-title">Let’s talk about your human-data pipeline.</h2>
+        <p class="section-intro">I’m looking for roles in AI data operations, evaluation, technical QA and AI project operations: remote, or anywhere the work is.</p>
+        <div class="contact-actions">
+          <a class="button button-primary button-lg" href="mailto:kveigas825@gmail.com">kveigas825@gmail.com</a>
+          <a class="button button-ghost button-lg" href="https://www.linkedin.com/in/kevinveigas" target="_blank" rel="noopener">LinkedIn <span class="ext" aria-hidden="true">↗</span></a>
+          <a class="button button-ghost button-lg" href="mailto:kveigas825@gmail.com?subject=R%C3%A9sum%C3%A9%20request">Request my résumé</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Kevin Prashant Veigas</p>
+      <p>Hand-built with HTML, CSS and a little JavaScript. No trackers.</p>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- Case studies -->
+  <dialog class="case" id="case-dataqual" aria-labelledby="case-dq-title">
+    <div class="dialog-shell">
+      <header class="dialog-head">
+        <div>
+          <p class="eyebrow">Case study · 01</p>
+          <h2 id="case-dq-title">DataQual</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close case study">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+      <div class="dialog-body" tabindex="0">
+        <section>
+          <h3>The problem</h3>
+          <p>Annotation teams need to know whether a dataset is reliable enough to use, where disagreement comes from, and where scarce review and labeling budget should go. Too often the answer is a spreadsheet or a single quality number that hides annotator uncertainty, consensus assumptions and the difference between an error and a genuinely ambiguous item.</p>
+        </section>
+        <section>
+          <h3>What I built</h3>
+          <div class="cap-grid">
+            <div><h4>Agreement &amp; coverage</h4><p>Percent agreement, pairwise agreement on genuinely shared items and Krippendorff’s alpha, all with bootstrap intervals.</p></div>
+            <div><h4>Consensus</h4><p>Majority vote, weighted vote and a from-scratch Dawid–Skene EM model, compared side by side with every item where they disagree.</p></div>
+            <div><h4>Annotator reliability</h4><p>Beta-Binomial shrinkage with leave-one-worker-out priors, 95% credible intervals and Dirichlet-smoothed confusion evidence.</p></div>
+            <div><h4>Disagreement diagnostics</h4><p>Explainable rules separate probable defects, ambiguity or policy gaps, mixed evidence and insufficient evidence, each with a recommended action.</p></div>
+            <div><h4>Review prioritization</h4><p>A ranked, paginated queue with a decomposable score, compared against four baselines on a deterministic simulator.</p></div>
+            <div><h4>Adaptive label collection</h4><p>Per-item stop / ask-for-more / escalate decisions from a smoothed worker model, with no gold used for planning.</p></div>
+          </div>
+        </section>
+        <section>
+          <h3>Validation</h3>
+          <ul class="check-list">
+            <li><strong>Reference parity.</strong> 100% hard-label parity with the pinned Crowd-Kit Dawid–Skene implementation on a real requirements-annotation benchmark (posterior MAE ≈ 7.7×10⁻¹¹).</li>
+            <li><strong>Honest history.</strong> An earlier smoothed variant reached only 68.75% parity; the cause was isolated and the variants are now kept separate.</li>
+            <li><strong>Real data, plain result.</strong> On that real benchmark, majority vote beat Dawid–Skene. Complex models do not always win.</li>
+            <li><strong>A discarded first version.</strong> The first adaptive-collection model was overconfident and lost 5–10 accuracy points. It was measured, documented and replaced.</li>
+            <li><strong>Engineering.</strong> 127 backend tests at 91.5% branch-inclusive coverage, Ruff and Pyright clean, frontend unit tests and a production build in CI.</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Product</h3>
+          <div class="gallery">
+            <figure><img src="assets/dataqual/dataqual-overview.jpg" width="1440" height="900" loading="lazy" alt="Coverage and agreement view with percent agreement, Krippendorff's alpha with confidence interval, and pairwise agreement table."><figcaption>Coverage and agreement, with intervals and support counts.</figcaption></figure>
+            <figure><img src="assets/dataqual/dataqual-consensus.jpg" width="1440" height="900" loading="lazy" alt="Consensus view comparing majority vote and Dawid–Skene labels."><figcaption>Consensus sensitivity: where majority vote and Dawid–Skene disagree.</figcaption></figure>
+            <figure><img src="assets/dataqual/dataqual-annotators.jpg" width="1440" height="900" loading="lazy" alt="Annotator view with reliability estimates and credible intervals."><figcaption>Annotator reliability with credible intervals.</figcaption></figure>
+            <figure><img src="assets/dataqual/dataqual-review-queue.jpg" width="1440" height="900" loading="lazy" alt="Review workspace with ranked candidates and an evidence panel explaining the top candidate."><figcaption>Review workspace: every rank comes with its evidence.</figcaption></figure>
+            <figure><img src="assets/dataqual/dataqual-benchmarks.jpg" width="1440" height="900" loading="lazy" alt="Benchmark view with normalized AUREC for five ranking methods over five seeds."><figcaption>Benchmarks, including the runs where ERV loses.</figcaption></figure>
+            <figure><img src="assets/dataqual/dataqual-diagnostics.jpg" width="1440" height="900" loading="lazy" alt="Disagreement diagnostics view classifying flagged items."><figcaption>Disagreement diagnostics with support and recommended actions.</figcaption></figure>
+          </div>
+        </section>
+        <section>
+          <h3>Stack</h3>
+          <p class="stack">Python 3.12 · FastAPI · DuckDB · Parquet · NumPy/SciPy · React · TypeScript · Vite · Pytest · Pyright · Ruff · Vitest · Playwright · axe</p>
+          <h3>Limits I state up front</h3>
+          <p>Synthetic benchmarks with five seeds are not enough for broad claims. The worker model assumes annotators err independently, and its posterior is not a calibrated error probability. The public demo has no authentication: never upload confidential data.</p>
+        </section>
+      </div>
+      <footer class="dialog-foot">
+        <a class="button button-primary" href="https://kveigas.github.io/dataqual/" target="_blank" rel="noopener">Open the live demo <span class="ext" aria-hidden="true">↗</span></a>
+        <a class="button button-ghost" href="https://github.com/kveigas/dataqual" target="_blank" rel="noopener">Source &amp; evidence <span class="ext" aria-hidden="true">↗</span></a>
+        <button class="button button-ghost" type="button" data-close-dialog>Close</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog class="case" id="case-opspilot" aria-labelledby="case-op-title">
+    <div class="dialog-shell">
+      <header class="dialog-head">
+        <div>
+          <p class="eyebrow">Case study · 02</p>
+          <h2 id="case-op-title">OpsPilot</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close case study">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+      <div class="dialog-body" tabindex="0">
+        <section>
+          <h3>The problem</h3>
+          <p>Human-data programs (annotation, RLHF preference ranking, AI evaluation) can fail operationally even when the guidelines are clear. A manager juggles qualification, capacity, routing, production state, review backlogs, escalations, SLA pressure and delivery — usually across dashboards that don’t agree and actions nobody can audit.</p>
+        </section>
+        <section>
+          <h3>What I built</h3>
+          <div class="cap-grid">
+            <div><h4>Decision brief</h4><p>The Today view leads with the next best action, plain-language SLA reasons, a completion forecast and a delivered-quality outlook.</p></div>
+            <div><h4>Quality-aware allocation</h4><p>Work goes only to annotators with every required skill, a passed calibration and capacity on the day; urgent work goes to the strongest QA tier. Each allocation records why.</p></div>
+            <div><h4>Adaptive, trust-based QA</h4><p>A Beta posterior per annotator sets the tier (trusted 5%, standard 20%, probation 50%, at risk 100%). Inclusion probabilities are stored, so quality is estimated with design weights.</p></div>
+            <div><h4>Execution &amp; escalations</h4><p>A 10-state task machine rejects invalid transitions; rework is capped at three attempts, then escalated with a recorded decision.</p></div>
+            <div><h4>Forecast &amp; delivery</h4><p>A Monte Carlo forecast gives P50/P90 dates. Five mandatory delivery gates each show their evidence and a link to fix them.</p></div>
+            <div><h4>Operational safeguards</h4><p>One transaction per business operation, idempotency keys on every mutation, UTC-correct timestamps and a non-destructive demo bootstrap.</p></div>
+          </div>
+        </section>
+        <section>
+          <h3>Validation</h3>
+          <ul class="check-list">
+            <li><strong>Budget-matched benchmark.</strong> Over 40 paired synthetic workforces, adaptive QA shipped 1.8% undetected errors versus 3.5% for uniform review at the same budget (better in 40 of 40), and needed 43% fewer reviews to match its quality.</li>
+            <li><strong>Correctness under failure.</strong> A failure injected mid-workday leaves tasks, reviews and audit records unchanged.</li>
+            <li><strong>Engineering.</strong> 70 backend tests at 94% coverage, Ruff and Pyright clean, 34 frontend unit tests, and Playwright flows with axe accessibility checks on all nine views.</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Product</h3>
+          <div class="gallery">
+            <figure><img src="assets/opspilot/opspilot-quality.jpg" width="1440" height="900" loading="lazy" alt="Quality insights view with the adaptive sampling policy, delivered-accuracy estimate and annotator trust tiers."><figcaption>Quality insights: trust tiers, delivered accuracy and review effort.</figcaption></figure>
+            <figure><img src="assets/opspilot/opspilot-allocations.jpg" width="1440" height="900" loading="lazy" alt="Allocation view with qualified capacity and allocation reasons."><figcaption>Allocation with a recorded reason for every assignment.</figcaption></figure>
+            <figure><img src="assets/opspilot/opspilot-qa.jpg" width="1440" height="900" loading="lazy" alt="Keyboard-first QA review queue."><figcaption>Keyboard-first QA review and escalations.</figcaption></figure>
+            <figure><img src="assets/opspilot/opspilot-delivery.jpg" width="1440" height="900" loading="lazy" alt="Delivery readiness view with five gates and their evidence."><figcaption>Five delivery gates, each with its evidence.</figcaption></figure>
+          </div>
+        </section>
+        <section>
+          <h3>Stack</h3>
+          <p class="stack">Python 3.12 · FastAPI · SQLAlchemy 2 · Pydantic 2 · SQLite · React 18 · TypeScript · Vite · Tailwind · Pytest · Vitest · Playwright · axe</p>
+          <h3>Limits I state up front</h3>
+          <p>All data is synthetic. The QA estimators assume reviewers are correct, the forecast has not been backtested on real throughput, and SLA status is rules-based rather than predictive. Authentication, multi-tenancy and hosted backups are not implemented.</p>
+        </section>
+      </div>
+      <footer class="dialog-foot">
+        <a class="button button-primary" href="https://kveigas.github.io/opspilot/" target="_blank" rel="noopener">Open the live demo <span class="ext" aria-hidden="true">↗</span></a>
+        <a class="button button-ghost" href="https://github.com/kveigas/opspilot" target="_blank" rel="noopener">Source &amp; evidence <span class="ext" aria-hidden="true">↗</span></a>
+        <button class="button button-ghost" type="button" data-close-dialog>Close</button>
+      </footer>
+    </div>
+  </dialog>
 </body>
-
 </html>

@@ -1,54 +1,68 @@
-# Kevin Veigas Portfolio
+# Kevin Veigas — portfolio
 
-Personal portfolio website presenting Kevin Veigas's experience, skills, education, and AI operations projects.
+Source for <https://kveigas.github.io>: experience, skills and two AI human-data projects (DataQual and OpsPilot), with interactive charts drawn from each project's published evidence.
 
-## Current architecture
+## Architecture
 
-This is a static website with no build step or server-side application.
+A static site with no build step and no framework.
 
-- `index.html` contains the page markup and React components.
-- `data.js` contains portfolio content and project links.
-- `styles.css` contains the site styles.
-- React 18, ReactDOM, Babel Standalone, Three.js, and Google Fonts load from public CDNs.
-- JSX is compiled in the browser by Babel Standalone.
+- `index.html` holds all content as semantic HTML, so the page is readable and indexable without JavaScript.
+- `styles.css` defines light and dark themes as CSS custom properties (OS preference by default, with a toggle that is remembered per browser).
+- `js/main.js` handles the theme, navigation, tabs, case-study dialogs (native `<dialog>`) and lazy mounting of visualizations.
+- `js/hero-sim.js` is the hero canvas: a small simulation of DataQual's adaptive label-collection rule. It pauses off-screen, in background tabs and on request, and renders a static final frame for `prefers-reduced-motion`.
+- `js/charts.js` draws the evidence charts as SVG sized to their container. Every chart has hover/focus tooltips and a data-table equivalent.
+- `js/evidence.js` contains the chart data, copied from the project repositories (see below).
+- Fonts load from Google Fonts. There are no other third-party requests and no analytics.
 
-An internet connection is required for the CDN-hosted dependencies.
+## Updating the evidence charts
+
+Chart values come from files committed in the project repositories. Update them only by re-running those projects' evaluation scripts, then copying the new values into `js/evidence.js`:
+
+| Chart | Source |
+| --- | --- |
+| Label savings, worker model vs. vote | `dataqual/docs/evidence/adaptive-collection*/summary.md` |
+| Review ranking | `dataqual/docs/evidence/review-ranking-v2/S*.json` |
+| Adaptive QA | `opspilot/docs/evidence/adaptive_qa_benchmark.json` |
+
+Product screenshots in `assets/` were captured at 1440×900 from local builds of each project running on synthetic demo data.
 
 ## Run locally
 
-From the repository root, start any static file server. For example:
+Any static file server works, for example:
 
 ```powershell
-npx serve .
+python -m http.server 8000
 ```
 
-Open the local URL printed by the command. You can also open `index.html` directly, but a static server provides a more reliable browser preview.
+Then open <http://localhost:8000>. ES modules do not load from `file://`, so opening `index.html` directly will not run the scripts.
 
 ## Deployment
 
 - Repository: <https://github.com/kveigas/kveigas.github.io>
-- Live site: <https://kveigas.github.io>
-- Hosting: GitHub Pages from the `main` branch
-
-Updates are deployed by committing the portfolio changes and pushing the `main` branch to GitHub. GitHub Pages then publishes the repository's static files directly; no build command is required.
+- Hosting: GitHub Pages from the `main` branch. Pushing to `main` publishes the site.
+- When changing `styles.css` or the scripts, bump the `?v=` query string in `index.html` so returning visitors get the new files.
 
 ## Separate project deployments
 
-DataQual is hosted separately at:
-
-<https://subtle-kashata-db5525.netlify.app>
+- DataQual: <https://kveigas.github.io/dataqual/>
+- OpsPilot: <https://kveigas.github.io/opspilot/> (API <https://opspilot-c5y3.onrender.com>)
 
 Ghost Oort is not deployed from this portfolio repository. It requires its own source repository and separate deployment. No Ghost Oort link should be added until its real deployment URL is available.
 
-## Repository structure
+## Structure
 
 ```text
 .
-├── index.html       # Portfolio page and React components
-├── data.js          # Portfolio content and project URLs
-├── styles.css       # Site styling
-├── favicon.svg      # Browser icon
-├── icons.svg        # SVG icon asset
-├── .gitignore       # Local-file exclusions
-└── README.md        # Project and deployment documentation
+├── index.html          # All page content
+├── styles.css          # Themes, layout and components
+├── favicon.svg         # Monogram icon (adapts to dark mode)
+├── js/
+│   ├── main.js         # Page behaviour
+│   ├── hero-sim.js     # Hero simulation (canvas)
+│   ├── charts.js       # Evidence charts (SVG)
+│   └── evidence.js     # Chart data with sources
+└── assets/
+    ├── social-card.png # Link-preview image (1200×630)
+    ├── dataqual/       # Product screenshots
+    └── opspilot/
 ```
