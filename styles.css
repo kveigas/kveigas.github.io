@@ -1,33 +1,54 @@
 /* Kevin Veigas — portfolio
-   Tokens first; light is the base, dark is selected (not inverted) under both the OS preference and the toggle. */
+   Tokens first; light is the base, dark is selected (not inverted) under both the OS preference and the toggle.
+   Palette: a Mediterranean mood (deep green, a touch of red, near-black ink) on a near-white canvas,
+   with soft impressionist "dappled light" behind the page. Text and UI pairs meet WCAG AA in both themes. */
 
 :root {
   color-scheme: light;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
 
-  --bg: #f6f6f2;
-  --bg-elev: #fcfcfa;
-  --bg-tint: #efefe9;
-  --ink: #0d0f0e;
-  --ink-2: #474a46;
-  --ink-3: #686b65;
-  --line: #e1e0d9;
-  --line-strong: #c6c5bc;
-  --accent: #0e8f66;
-  --accent-ink: #0a6a4b;
-  --accent-wash: rgba(14, 143, 102, 0.09);
+  --bg: #ffffff;
+  --bg-elev: #ffffff;
+  --bg-tint: #fafaf8;
+  --ink: #111311;
+  --ink-2: #44473f;
+  --ink-3: #626459;
+  --line: #e9e7e1;
+  --line-strong: #d2cec5;
+  --accent: #0b7a3e;
+  --accent-ink: #076232;
+  --accent-wash: rgba(11, 122, 62, 0.09);
   --on-accent: #ffffff;
+  --red: #c8202f;
+  --red-ink: #a8182a;
+  --red-wash: rgba(200, 32, 47, 0.1);
 
-  /* Chart series (validated pair: CVD ΔE 19.5, contrast ≥ 3:1 on --bg-elev) */
-  --series-a: #0e8f66;
-  --series-b: #5a6fd8;
-  --series-muted: #b3b1a8;
-  --warn: #c98500;
+  /* A soft, painterly hairline (blended, not banded) used at the top of the page. */
+  --stroke: linear-gradient(90deg, transparent 0%, var(--accent) 22%, #d6a028 50%, var(--red) 78%, transparent 100%);
+  /* Hand-painted brush stroke under the hero's key word (colour baked per theme). */
+  --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='40' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath fill='%23c8202f' fill-opacity='.32' d='M3 22c48-9 101 3 152-4s97-11 146-6 64 6 96 3l-2 12c-41 5-87-1-131 3s-104 7-154 4-79-1-106 1z'/%3E%3Cpath d='M12 31c60-4 118 1 178-2s120-6 200-1' fill='none' stroke='%23c8202f' stroke-opacity='.22' stroke-width='3'/%3E%3C/svg%3E");
 
-  --hover: rgba(13, 15, 14, 0.045);
-  --shadow-sm: 0 1px 2px rgba(15, 20, 18, 0.05);
-  --shadow: 0 1px 2px rgba(15, 20, 18, 0.04), 0 12px 32px -16px rgba(15, 20, 18, 0.16);
+  /* Blended background washes in the flag-inspired colours (decorative, behind all content):
+     green and red glows that melt into the white, plus a faint charcoal haze. */
+  --wash-green: rgba(11, 122, 62, 0.18);
+  --wash-red: rgba(206, 43, 55, 0.14);
+  --wash-green-2: rgba(11, 122, 62, 0.12);
+  --wash-red-2: rgba(206, 43, 55, 0.1);
+  --wash-ink: rgba(17, 19, 17, 0.05);
+  --grain-opacity: 0.05;
+  --grain-filter: none;
+
+  /* Chart series: green vs. cornflower blue, both ≥ 4.5:1 on --bg and --bg-elev. */
+  --series-a: #0b7a3e;
+  --series-b: #4f6db8;
+  --series-muted: #bdb5a5;
+  --warn: #b57600;
+
+  --hover: rgba(17, 19, 17, 0.045);
+  --shadow-sm: 0 1px 2px rgba(40, 30, 10, 0.05);
+  --shadow: 0 1px 2px rgba(40, 30, 10, 0.04), 0 12px 32px -16px rgba(40, 30, 10, 0.18);
   --radius: 16px;
   --radius-sm: 10px;
   --container: 1160px;
@@ -38,21 +59,32 @@
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
     color-scheme: dark;
-    --bg: #0b0e0d;
-    --bg-elev: #121614;
-    --bg-tint: #0f1312;
-    --ink: #f2f3f0;
-    --ink-2: #c3c7c1;
-    --ink-3: #959a94;
-    --line: #232a27;
-    --line-strong: #37413c;
-    --accent: #1fa575;
-    --accent-ink: #4fd1a1;
-    --accent-wash: rgba(31, 165, 117, 0.13);
-    --on-accent: #04130d;
-    --series-a: #1fa575;
-    --series-b: #6b7ce6;
-    --series-muted: #4a524e;
+    --bg: #0e1110;
+    --bg-elev: #151a17;
+    --bg-tint: #111614;
+    --ink: #f3f1ea;
+    --ink-2: #cac6ba;
+    --ink-3: #9b978b;
+    --line: #252b28;
+    --line-strong: #3a423e;
+    --accent: #2fb46a;
+    --accent-ink: #72dba0;
+    --accent-wash: rgba(47, 180, 106, 0.13);
+    --on-accent: #05140b;
+    --red: #ff5d63;
+    --red-ink: #ff8d91;
+    --red-wash: rgba(255, 93, 99, 0.12);
+    --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='40' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath fill='%23ff5d63' fill-opacity='.34' d='M3 22c48-9 101 3 152-4s97-11 146-6 64 6 96 3l-2 12c-41 5-87-1-131 3s-104 7-154 4-79-1-106 1z'/%3E%3Cpath d='M12 31c60-4 118 1 178-2s120-6 200-1' fill='none' stroke='%23ff5d63' stroke-opacity='.24' stroke-width='3'/%3E%3C/svg%3E");
+    --wash-green: rgba(47, 180, 106, 0.16);
+    --wash-red: rgba(255, 93, 99, 0.11);
+    --wash-green-2: rgba(47, 180, 106, 0.09);
+    --wash-red-2: rgba(255, 93, 99, 0.07);
+    --wash-ink: rgba(0, 0, 0, 0.35);
+    --grain-opacity: 0.07;
+    --grain-filter: invert(1);
+    --series-a: #2fb46a;
+    --series-b: #8496e2;
+    --series-muted: #4b524e;
     --warn: #fab219;
     --hover: rgba(255, 255, 255, 0.05);
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -62,21 +94,32 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0b0e0d;
-  --bg-elev: #121614;
-  --bg-tint: #0f1312;
-  --ink: #f2f3f0;
-  --ink-2: #c3c7c1;
-  --ink-3: #959a94;
-  --line: #232a27;
-  --line-strong: #37413c;
-  --accent: #1fa575;
-  --accent-ink: #4fd1a1;
-  --accent-wash: rgba(31, 165, 117, 0.13);
-  --on-accent: #04130d;
-  --series-a: #1fa575;
-  --series-b: #6b7ce6;
-  --series-muted: #4a524e;
+  --bg: #0e1110;
+  --bg-elev: #151a17;
+  --bg-tint: #111614;
+  --ink: #f3f1ea;
+  --ink-2: #cac6ba;
+  --ink-3: #9b978b;
+  --line: #252b28;
+  --line-strong: #3a423e;
+  --accent: #2fb46a;
+  --accent-ink: #72dba0;
+  --accent-wash: rgba(47, 180, 106, 0.13);
+  --on-accent: #05140b;
+  --red: #ff5d63;
+  --red-ink: #ff8d91;
+  --red-wash: rgba(255, 93, 99, 0.12);
+  --brush: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='40' viewBox='0 0 400 40' preserveAspectRatio='none'%3E%3Cpath fill='%23ff5d63' fill-opacity='.34' d='M3 22c48-9 101 3 152-4s97-11 146-6 64 6 96 3l-2 12c-41 5-87-1-131 3s-104 7-154 4-79-1-106 1z'/%3E%3Cpath d='M12 31c60-4 118 1 178-2s120-6 200-1' fill='none' stroke='%23ff5d63' stroke-opacity='.24' stroke-width='3'/%3E%3C/svg%3E");
+  --wash-green: rgba(47, 180, 106, 0.16);
+  --wash-red: rgba(255, 93, 99, 0.11);
+  --wash-green-2: rgba(47, 180, 106, 0.09);
+  --wash-red-2: rgba(255, 93, 99, 0.07);
+  --wash-ink: rgba(0, 0, 0, 0.35);
+  --grain-opacity: 0.07;
+  --grain-filter: invert(1);
+  --series-a: #2fb46a;
+  --series-b: #8496e2;
+  --series-muted: #4b524e;
   --warn: #fab219;
   --hover: rgba(255, 255, 255, 0.05);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -109,6 +152,32 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
+}
+
+/* Impressionist canvas: soft patches of light and a faint canvas grain, fixed behind the page.
+   Fixed pseudo-elements (not background-attachment) so scrolling stays smooth on phones. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  background:
+    radial-gradient(52vmax 36vmax at 0% 0%, var(--wash-green), transparent 70%),
+    radial-gradient(46vmax 34vmax at 100% 4%, var(--wash-red), transparent 70%),
+    radial-gradient(44vmax 32vmax at 100% 100%, var(--wash-green-2), transparent 70%),
+    radial-gradient(40vmax 30vmax at 0% 100%, var(--wash-red-2), transparent 70%),
+    radial-gradient(70vmax 34vmax at 50% 118%, var(--wash-ink), transparent 72%);
+}
+
+body::after {
+  opacity: var(--grain-opacity);
+  filter: var(--grain-filter);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
 [hidden] {
@@ -201,6 +270,30 @@ a:hover {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent-ink);
+}
+
+/* A small red brush dab before section labels. */
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 4px;
+  margin-right: 10px;
+  vertical-align: 0.2em;
+  border-radius: 3px 1px 3px 1px;
+  background: var(--red);
+  opacity: 0.85;
+}
+
+/* Display serif for headings: an elegant, slightly soft face. */
+.hero h1,
+.section-head h2,
+.project-title,
+.dialog-head h2,
+.contact h2,
+.impact-grid strong {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 60;
 }
 
 /* ---------- Buttons ---------- */
@@ -357,6 +450,16 @@ a:hover {
 
 .site-header.is-scrolled {
   border-bottom-color: var(--line);
+}
+
+/* A soft painterly hairline along the top of the page. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--stroke);
+  opacity: 0.75;
 }
 
 .header-inner {
@@ -541,9 +644,22 @@ a:hover {
 }
 
 .hero h1 em {
+  position: relative;
+  z-index: 0;
   font-style: normal;
   color: var(--accent-ink);
-  background: linear-gradient(transparent 72%, var(--accent-wash) 72%);
+}
+
+/* A loose, hand-painted red brush stroke under "measured". */
+.hero h1 em::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -3%;
+  right: -2%;
+  bottom: 0.02em;
+  height: 0.36em;
+  background: var(--brush) center / 100% 100% no-repeat;
 }
 
 .lede {
@@ -812,7 +928,8 @@ a:hover {
 }
 
 .section-tint {
-  background: var(--bg-tint);
+  /* Translucent so the blended background washes carry through every section. */
+  background: color-mix(in srgb, var(--bg-tint) 55%, transparent);
   border-block: 1px solid var(--line);
 }
 
@@ -861,7 +978,7 @@ a:hover {
   margin-right: 4px;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  color: var(--ink-3);
+  color: var(--red-ink);
 }
 
 .project-title {
@@ -2036,7 +2153,17 @@ html:has(dialog[open]) {
   }
 }
 
+/* Display-serif tracking: the serif needs less negative letter-spacing than Inter did. */
+.hero h1 { letter-spacing: -0.025em; font-weight: 620; }
+.section-head h2,
+.project-title,
+.contact h2 { letter-spacing: -0.02em; font-weight: 600; }
+.dialog-head h2 { letter-spacing: -0.015em; }
+.impact-grid strong { letter-spacing: -0.015em; }
+
 @media print {
+  body::before,
+  body::after,
   .site-header,
   .sim-card,
   .hero-actions,

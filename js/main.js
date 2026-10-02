@@ -11,7 +11,7 @@ function paintThemeToggle() {
   const dark = currentTheme() === 'dark';
   themeToggle.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
   themeToggle.dataset.mode = dark ? 'dark' : 'light';
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0c0f0e' : '#f6f6f2');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0e1110' : '#ffffff');
 }
 themeToggle.addEventListener('click', () => {
   const next = currentTheme() === 'dark' ? 'light' : 'dark';
